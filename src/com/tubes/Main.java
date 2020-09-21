@@ -5,18 +5,17 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        int nrow;
-        int ncol;
+        int nrow,ncol,dimension;
 
         boolean exit = false;
 	    while(!exit){
             System.out.println("MENU\n" +
-                    "1. Sistem Persamaan Linear" +
-                    "2. Determinan" +
-                    "3. Matriks Balikan" +
-                    "4. Interpolasi Polinom" +
-                    "5. Regresi Linear Berganda" +
-                    "6. Exit");
+                    "1. Sistem Persamaan Linear\n" +
+                    "2. Determinan\n" +
+                    "3. Matriks Balikan\n" +
+                    "4. Interpolasi Polinom\n" +
+                    "5. Regresi Linear Berganda\n" +
+                    "6. Exit\n");
             Scanner input = new Scanner(System.in);
             int opt = input.nextInt();
 
@@ -29,6 +28,14 @@ public class Main {
 
                 case 2:
                     System.out.println("Determinan");
+                    System.out.print("Enter the matrix dimension (nxn) : ");
+                    dimension = input.nextInt();
+                    SquareMatrix matrix = new SquareMatrix();
+                    matrix.makeMatrix(dimension);
+                    Operations.fillMatrix(matrix);
+                    Operations.printMatrix(matrix);
+                    double det = Determinant.RowReductionDeterminant(matrix);
+                    System.out.println("The determinant value is " + det);
                     break;
 
                 case 3:
