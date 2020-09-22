@@ -36,6 +36,8 @@ public class Main {
                     Operations.printMatrix(matrix);
                     double det = Determinant.RowReductionDeterminant(matrix);
                     System.out.println("The determinant value is " + det);
+                    det = Determinant.CofactorExpansionDeterminant(matrix);
+                    System.out.println("The determinant value is " + det);
                     break;
 
                 case 3:

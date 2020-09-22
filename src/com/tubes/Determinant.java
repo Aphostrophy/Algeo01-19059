@@ -13,7 +13,6 @@ public class Determinant {
                 a = j;
                 b = a+1;
                 while(matrix.getElmt(j,j)==0){
-                    System.out.println("Oh no");
                     if(b>=n){
                         return 0; //Because of the main diagonal element is zero <=> Determinant equals 0
                     }
@@ -37,6 +36,17 @@ public class Determinant {
     }
 
     static double CofactorExpansionDeterminant(SquareMatrix matrix){
-        return 0;
+        double det = 0;
+        if(matrix.getDimension()==1){
+            return matrix.getElmt(0,0);
+        }
+        else{
+            int sign;
+            for(int i=0;i<matrix.getDimension();i++){
+                sign = (int) Math.pow(-1,i);
+                det += sign* matrix.getElmt(0,i)* CofactorExpansionDeterminant(Operations.cofactor(matrix,0,i));
+            }
+        }
+        return det;
     }
 }
