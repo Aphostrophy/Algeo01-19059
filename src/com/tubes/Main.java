@@ -24,6 +24,34 @@ public class Main {
                     System.out.println("Sistem persamaan linear");
                     nrow = input.nextInt();
                     ncol = input.nextInt();
+                    System.out.println("1. Manual Input" +
+                            "2. Upload file");
+                    Matrix matrixSPL = new Matrix();
+                    int ops = input.nextInt();
+                    switch(ops){
+                        case 1:
+                            matrixSPL.makeMatrix(nrow,ncol);
+                            Operations.fillMatrix(matrixSPL);
+                        default:
+                            System.out.println("Fitur belum tersedia");
+                    }
+                    System.out.println("1. Metode Eliminasi Gauss\n" +
+                            "2. Metode eliminasi Gauss-Jordan\n" +
+                            "3. Metode matriks balikan\n" +
+                            "4. Kaidah crammer ");
+                    int op = input.nextInt();
+                    switch(op){
+                        case 1:
+                            System.out.println("Metode Eliminasi Gauss");
+                        case 2:
+                            System.out.println("Metode eliminasi Gauss-Jordan");
+                        case 3:
+                            System.out.println("Metode matriks balikan");
+                        case 4:
+                            System.out.println("Kaidah crammer");
+                        default:
+                            System.out.println("Input salah");
+                    }
                     break;
 
                 case 2:

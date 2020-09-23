@@ -7,17 +7,18 @@ public class Operations {
     static void swapRow(int a,int b,SquareMatrix matrix){
         double temp;
         for(int i=0;i< matrix.getDimension(); i++ ){
-            temp = matrix.getElmt(i,a);
-            matrix.setElmt(i,a, matrix.getElmt(i,b));
-            matrix.setElmt(i,b, temp);
+            temp = matrix.getElmt(a,i);
+            matrix.setElmt(a,i, matrix.getElmt(b,i));
+            matrix.setElmt(b,i, temp);
         }
     }
 
-    static void swapRow(int a, int b, Matrix matrix){
+    static void swapRow(int a, int b,int n_col, Matrix matrix){
         double temp;
         for(int i=0;i< matrix.getNrow(); i++){
-            temp = matrix.getElmt(i,a);
-            matrix.setElmt(i,a, matrix.getElmt(i,b));
+            temp = matrix.getElmt(a,i);
+            matrix.setElmt(a,i, matrix.getElmt(b,i));
+            matrix.setElmt(b,i, temp);
         }
     }
 
@@ -42,11 +43,7 @@ public class Operations {
         int n_col = matrix.getDimension();
         for(i=0;i<n_row;i++){
             for(j=0;j<n_col;j++){
-                if(j==n_col-1){
-                    System.out.print(matrix.getElmt(i,j) + "\n");
-                } else {
-                    System.out.print(matrix.getElmt(i,j) + " ");
-                }
+                System.out.print(matrix.getElmt(i,j));
             }
         }
     }
@@ -103,4 +100,36 @@ public class Operations {
         Matrix malesmikir = new Matrix();
         return malesmikir;
     }
+
+    static Matrix gauss(Matrix matrix){
+        int n_row = matrix.getNrow();
+        int n_col = matrix.getNcol();
+        int row_mark = 0;
+        for(int j=0;j<n_col;j++){
+            for(int r=0;r<n_row;r++){
+                boolean colZero = false;
+                int a = row_mark;
+                int b = a+1;
+                while(matrix.getElmt(row_mark,j)==0 && !colZero){
+                    if(b>=n_row){
+                        colZero=true;
+                    } else{
+                        swapRow(a,b,n_col,matrix);
+                    }
+                }
+                if(colZero){
+                    break;
+                }
+                double multiplier = matrix.getElmt(r,j)/matrix.getElmt(row_mark,j);
+                for(int e=0;e<n_col;e++){
+                    matrix.setElmt(r,e, (matrix.getElmt(r,e) - multiplier*matrix.getElmt(row_mark,e)));
+                }
+                row_mark += 1;
+            }
+        }
+        return matrix;
+    }
+
+
+    
 }

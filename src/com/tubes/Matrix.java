@@ -3,7 +3,7 @@ package com.tubes;
 public class Matrix {
     private int n_row;
     private int n_col;
-    private double[][] Matrix;
+    public double[][] Matrix;
 
     public void makeMatrix(int n_row, int n_col){
         this.n_row = n_row;
