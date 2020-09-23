@@ -130,6 +130,56 @@ public class Operations {
         return matrix;
     }
 
+    static Matrix transpose(Matrix matrix) {
+        Matrix temp = new Matrix();
+        temp.makeMatrix(matrix.getNcol(), matrix.getNrow());
+        for(int i = 0; i < temp.getNrow(); i++) {
+            for(int j = 0; j < temp.getNcol(); j++){
+                temp.setElmt(i, j, matrix.getElmt(j, i));
+            }
+        }
+        return temp;
+    }
 
+    static SquareMatrix transpose(SquareMatrix matrix) {
+        SquareMatrix temp = new SquareMatrix();
+        temp.makeMatrix(matrix.getDimension());
+        for(int i = 0; i < temp.getDimension(); i++) {
+            for(int j = 0; j < temp.getDimension(); j++){
+                temp.setElmt(i, j, matrix.getElmt(j, i));
+            }
+        }
+        return temp;
+    }
+
+    static void scalarMultiplication(Matrix matrix, double x){
+        for(int i = 0; i < matrix.getNrow(); i++) {
+            for(int j = 0; j < matrix.getNcol(); j++) {
+                matrix.setElmt(i, j, matrix.getElmt(i, j) * x);
+            }
+        }
+    }
+
+    static void scalarMultiplication(SquareMatrix matrix, double x){
+        for(int i = 0; i < matrix.getDimension(); i++) {
+            for(int j = 0; j < matrix.getDimension(); j++) {
+                matrix.setElmt(i, j, matrix.getElmt(i, j) * x);
+            }
+        }
+    }
+
+    static SquareMatrix getAdjoint(SquareMatrix matrix) {
+        SquareMatrix cofactorMatrix = new SquareMatrix();
+        SquareMatrix adjointMatrix = new SquareMatrix();
+        cofactorMatrix.makeMatrix(matrix.getDimension());
+        adjointMatrix.makeMatrix(matrix.getDimension());
+        for(int i = 0; i < matrix.getDimension(); i++) {
+            for(int j = 0; j < matrix.getDimension(); j++) {
+                cofactorMatrix.setElmt(i, j, Determinant.CofactorExpansionDeterminant(cofactor(matrix, i, j)));
+            }
+        }
+        adjointMatrix = transpose(cofactorMatrix);
+        return adjointMatrix;
+    }
     
 }
