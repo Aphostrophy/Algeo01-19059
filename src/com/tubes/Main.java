@@ -1,6 +1,7 @@
 package com.tubes;
 
 import java.util.Scanner;
+import java.io.File;
 
 public class Main {
 
@@ -34,8 +35,11 @@ public class Main {
                     if(ops==1) {
                         matrixSPL.makeMatrix(nrow, ncol);
                         Operations.fillMatrix(matrixSPL);
-                    } else{
-                            System.out.println("Fitur belum tersedia");
+                    } else if (ops == 2) {
+                        // input nama file
+                        Scanner inputFileName = new Scanner(System.in);
+                        String namaFile = inputFileName.nextLine();
+                        System.out.println("Fitur belum tersedia");
                     }
                     System.out.println("1. Metode Eliminasi Gauss\n" +
                             "2. Metode eliminasi Gauss-Jordan\n" +
@@ -80,6 +84,7 @@ public class Main {
 
                 case 5:
                     System.out.println("Regresi Linear Berganda");
+                    break;
 
                 case 6:
                     System.out.println("Exit");
