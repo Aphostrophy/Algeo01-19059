@@ -1,7 +1,6 @@
 package com.tubes;
 
 import java.util.Scanner;
-import java.io.File;
 
 public class Main {
 
@@ -39,6 +38,7 @@ public class Main {
                         // input nama file
                         Scanner inputFileName = new Scanner(System.in);
                         String namaFile = inputFileName.nextLine();
+                        IOFile.fileToMatriks(matrixSPL, namaFile);
                         System.out.println("Fitur belum tersedia");
                     }
                     System.out.println("1. Metode Eliminasi Gauss\n" +

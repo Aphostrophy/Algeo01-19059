@@ -1,42 +1,82 @@
 package com.tubes;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.Scanner;
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.FileNotFoundException;
+import java.io.BufferedReader;
+import java.io.IOException;
 
 public class IOFile {
 
-    public void fileToMatriks(String fileName) {
-        try {
-            // KAMUS CEUNAH
-            Matrix matriksFile = new Matrix();
-            int row, col;
+    static void fileToMatriks(Matrix matriks, String fileName) {
+        /* I.S. matriks sembarang */
+        /* F.S. terbentuk matriks dari file yang dibaca */
+        // Proses. Membaca file baris perbaris dan mengubahnya persatuan float
+        // KAMUS CEUNAH
+        int i;
+        int j;
+        int col;
+        int row;
 
-            // ALGORITMA
-            // baca input file
-            File myFile = new File(fileName);
-            Scanner fileReader = new Scanner(myFile);
-            try {
-                row = 0;
-                while (fileReader.hasNextLine()) {
-                    String stringFile = fileReader.nextLine();
-                    Scanner scannerString = new Scanner(stringFile);
-                    try {
-                        col = 0;
-                        while (scannerString.hasNextDouble()) {
-                            matriksFile.setElmt(row, col, scannerString.nextDouble());
-                            col++;
-                        }
-                    } finally {
-                        scannerString.close();
-                    }
-                    row++;
+        // ALGORITMA
+        // baca input file
+        try (Scanner fileReader= new Scanner(new BufferedReader(new FileReader(fileName)))) {
+            i = 0;
+            row = 0;
+            col = 0;
+            while (fileReader.hasNextLine()) {
+                String[] line = fileReader.nextLine().trim().split(" ");
+                for (j = 0; j < line.length; j++) {
+                    matriks.setElmt(i, j, Float.parseFloat(line[j]));
+                    col = j;
                 }
-            } finally {
-                fileReader.close();
+                i++;
+            }
+            row = i;
+            matriks.setNcol(col);
+            matriks.setNrow(row);
+        } catch (FileNotFoundException ex) {
+            System.out.println("File " + fileName + " was not found.");
+        }
+    }
+
+    static void matriksToFile(Matrix matriks, String fileName) {
+        // KAMUS
+        int i;
+        int j;
+        String line;
+
+        // ALGORITMA
+        try {
+            File myFile = new File(fileName);
+            if (myFile.createNewFile()) {
+                System.out.println("File created: " + myFile.getName());
             } 
-        } catch (FileNotFoundException e) {
-            System.out.println("File tidak ditemukan.");
+
+            try (FileWriter myWriter = new FileWriter(myFile.getName())) {
+                for (i = 0; i < matriks.getNrow(); i++) {
+                    line = "";
+                    for (j = 0; j < matriks.getNcol(); j++) {
+                        line += String.valueOf(matriks.getElmt(i, j));
+                        if (j != matriks.getNcol() - 1) {
+                            line += " ";
+                        }
+                    }
+                    myWriter.write(line);
+                    if (i != matriks.getNrow() - 1) {
+                        myWriter.write("%n");
+                    }
+                }
+                myWriter.close();
+            } catch (FileNotFoundException ex) {
+                System.out.println("File " + fileName + " was not found.");
+            }
+            
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
             e.printStackTrace();
         }
     }
