@@ -34,8 +34,11 @@ public class Main {
                     if(ops==1) {
                         matrixSPL.makeMatrix(nrow, ncol);
                         Operations.fillMatrix(matrixSPL);
-                    } else{
-                            System.out.println("Fitur belum tersedia");
+                    } else if (ops == 2) {
+                        // input nama file
+                        Scanner inputFileName = new Scanner(System.in);
+                        String namaFile = inputFileName.nextLine();
+                        IOFile.fileToMatriks(matrixSPL, namaFile);
                     }
                     System.out.println("1. Metode Eliminasi Gauss\n" +
                             "2. Metode eliminasi Gauss-Jordan\n" +
@@ -76,13 +79,20 @@ public class Main {
 
                 case 4:
                     System.out.println("Interpolasi polinom");
+                    Scanner p = new Scanner(System.in);
+                    Interpolasi interpolasi = new Interpolasi();
+                    System.out.print("Jumlah titik: ");
+                    int n = p.nextInt();
+                    interpolasi.driverManual(n);
                     break;
 
                 case 5:
                     System.out.println("Regresi Linear Berganda");
-
+                    break;
+                    
                 case 6:
-                    System.out.println("Exit");
+                    System.out.println("Exiting...");
+                    exit = true;
                     break;
 
                 default:

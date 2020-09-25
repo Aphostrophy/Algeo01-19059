@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class SquareMatrix {
     private int dimension;
-    public double[][] Matrix;
+    private double[][] Matrix;
 
     public void makeMatrix(int dimension){
         this.dimension = dimension;
