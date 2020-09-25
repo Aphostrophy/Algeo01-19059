@@ -76,13 +76,19 @@ public class Main {
 
                 case 4:
                     System.out.println("Interpolasi polinom");
+                    Scanner p = new Scanner(System.in);
+                    Interpolasi interpolasi = new Interpolasi();
+                    System.out.print("Jumlah titik: ");
+                    int n = p.nextInt();
+                    interpolasi.driverManual(n);
                     break;
 
                 case 5:
                     System.out.println("Regresi Linear Berganda");
-
+                    break;
                 case 6:
-                    System.out.println("Exit");
+                    System.out.println("Exiting...");
+                    exit = true;
                     break;
 
                 default:
