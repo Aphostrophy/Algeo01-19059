@@ -39,7 +39,6 @@ public class Main {
                         Scanner inputFileName = new Scanner(System.in);
                         String namaFile = inputFileName.nextLine();
                         IOFile.fileToMatriks(matrixSPL, namaFile);
-                        System.out.println("Fitur belum tersedia");
                     }
                     System.out.println("1. Metode Eliminasi Gauss\n" +
                             "2. Metode eliminasi Gauss-Jordan\n" +

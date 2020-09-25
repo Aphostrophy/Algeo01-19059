@@ -30,7 +30,7 @@ public class IOFile {
             while (fileReader.hasNextLine()) {
                 String[] line = fileReader.nextLine().trim().split(" ");
                 for (j = 0; j < line.length; j++) {
-                    matriks.setElmt(i, j, Float.parseFloat(line[j]));
+                    matriks.setElmt(i, j, Double.parseDouble(line[j]));
                     col = j;
                 }
                 i++;
