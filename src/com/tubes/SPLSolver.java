@@ -181,7 +181,115 @@ public class SPLSolver {
         for(int i=solutions.size()-1;i>-1;i--){
             System.out.println("x"+ (solutions.size() - i) + "=" + solutions.get(i));
         }
+    }
 
+    static void extractAug(Matrix m, SquareMatrix matriksA, Matrix matriksB) {
+        // KAMUS
+        int i;
+        int j;
+
+        // matrix augmented menjadi matriks biasa
+        for (i = 0; i < m.getNrow() - 1; i++) {
+            for (j = 0; j < m.getNcol() - 1; j++) {
+                if (j != m.getNcol()-1) {
+                    matriksA.setElmt(i, j, m.getElmt(i, j));
+                } else {
+                    matriksB.setElmt(i, 0, m.getElmt(i, j));
+                }
+            }
+        }
+        matriksA.setDimension(m.getNrow());
+
+        matriksB.setNrow(m.getNrow());
+        matriksB.setNcol(1);
+    }
+
+    // SPL Cramer
+    static void cramerSPL(Matrix m) {
+        // KAMUS
+        int i;
+        int j;
+        int curCol;
+        SquareMatrix temp = new SquareMatrix();
+        SquareMatrix matriksA = new SquareMatrix();
+        Matrix matriksB = new Matrix();
+        Matrix hasilMatriks = new Matrix();
+        double xi;
+        double detA;
+
+        // ALGORITMA
+        // matrix augmented menjadi matriks biasa
+        extractAug(m, matriksA, matriksB);
+
+        // inisialisasi matriks penyimpan hasil
+        hasilMatriks.setNcol(1);
+        hasilMatriks.setNrow(matriksA.getDimension());
+
+        // operasi SPL Cramer
+        temp.setDimension(m.getNrow());
+        xi = 0;
+        detA = Determinant.RowReductionDeterminant(matriksA);
+        if (detA != 0) {
+            for (curCol = 0; curCol < matriksA.getDimension() - 1; curCol++) {
+                for (i = 0; i < matriksA.getDimension() - 1; i++) {
+                    for (j = 0; j < matriksA.getDimension() - 1; j++) {
+                        if (j == curCol) {
+                            temp.setElmt(i, j, matriksB.getElmt(i, 0));
+                        } else {
+                            temp.setElmt(i, j, matriksA.getElmt(i, j));
+                        }
+                    } 
+                }
+                xi = Determinant.RowReductionDeterminant(temp) / detA;
+                hasilMatriks.setElmt(curCol, 0, xi);
+            }
+
+            for (i = 0; i < hasilMatriks.getNrow() - 1; i++) {
+                System.out.println("x " + (i + 1) + " : " + hasilMatriks.getElmt(i, 0));
+            }
+
+        } else {
+            System.out.println("Determinan 0, SPL tidak memiliki solusi unik.");
+        }
+
+        
+    }
+
+    // SPL Invers Matrix
+    static void inversSPL(Matrix m) {
+        // KAMUS
+        int i;
+        int j;
+        int k;
+        double hasil;
+        SquareMatrix matriksA = new SquareMatrix();
+        Matrix matriksB = new Matrix();
+        Matrix hasilMatriks = new Matrix();
+
+        // ALGORITMA
+        // Mengambil matriks SPL dari matriks augmented
+        extractAug(m, matriksA, matriksB);
+
+        // invers matriks
+        Inverse.RowOperationInverse(matriksA);
+        
+        // inisialisasi matriks penyimpan hasil
+        hasilMatriks.setNcol(1);
+        hasilMatriks.setNrow(matriksA.getDimension());
+
+        for (i = 0; i < matriksA.getDimension() - 1; i++) {
+            for (j = 0; j < matriksA.getDimension() - 1; j++) {
+                hasil = 0;
+                for (k = 0; k < matriksA.getDimension() - 1; k++) {
+                    hasil += matriksA.getElmt(i, k) * matriksB.getElmt(k, 0);
+                }
+                hasilMatriks.setElmt(i, 0, hasil);
+            }
+        }
+        
+        for (i = 0; i < hasilMatriks.getNrow() - 1; i++) {
+            System.out.println("x " + (i + 1) + " : " + hasilMatriks.getElmt(i, 0));
+        }
     }
 
     static Vector<Double> singleSolutionReturn(Matrix matrix){
