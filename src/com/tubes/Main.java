@@ -1,10 +1,11 @@
 package com.tubes;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         int nrow,ncol,dimension;
 
         boolean exit = false;
@@ -22,20 +23,22 @@ public class Main {
             switch (opt){
                 case 1:
                     System.out.println("Sistem persamaan linear");
-                    System.out.print("Baris: ");
-                    nrow = input.nextInt();
-                    System.out.print("Kolom: ");
-                    ncol = input.nextInt();
                     System.out.println("1. Manual Input\n" +
                             "2. Upload file");
                     Matrix matrixSPL = new Matrix();
                     SPLSolver SPL = new SPLSolver();
                     int ops = input.nextInt();
                     if(ops==1) {
+                        System.out.print("Baris: ");
+                        nrow = input.nextInt();
+                        System.out.print("Kolom: ");
+                        ncol = input.nextInt();
                         matrixSPL.makeMatrix(nrow, ncol);
                         Operations.fillMatrix(matrixSPL);
                     } else if (ops == 2) {
                         // input nama file
+                        System.out.print("Masukkan nama file :\n");
+
                         Scanner inputFileName = new Scanner(System.in);
                         String namaFile = inputFileName.nextLine();
                         IOFile.fileToMatriks(matrixSPL, namaFile);
