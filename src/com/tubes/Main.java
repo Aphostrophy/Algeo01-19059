@@ -50,6 +50,7 @@ public class Main {
                         SPL.gaussDriver(matrixSPL);
                     } else if(op==2) {
                         System.out.println("Metode eliminasi Gauss-Jordan");
+                        SPL.gaussJordanSolver(matrixSPL);
                     } else if(op==3) {
                         System.out.println("Metode matriks balikan");
                     } else if(op==4) {
@@ -75,6 +76,16 @@ public class Main {
 
                 case 3:
                     System.out.println("Matriks Balikan");
+                    System.out.print("Enter the matrix dimension (nxn) : ");
+                    dimension = input.nextInt();
+                    SquareMatrix matrixInverse = new SquareMatrix();
+                    matrixInverse.makeMatrix(dimension);
+                    Operations.fillMatrix(matrixInverse);
+                    Operations.printMatrix(matrixInverse);
+                    System.out.println("Invers Matriks: ");
+                    Inverse.AdjointInverse(matrixInverse);
+                    System.out.println("Invers Matriks: ");
+                    Inverse.RowOperationInverse(matrixInverse);
                     break;
 
                 case 4:

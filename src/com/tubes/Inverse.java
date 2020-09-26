@@ -2,14 +2,14 @@ package com.tubes;
 
 public class Inverse {
 
-    static SquareMatrix AdjointInverse(SquareMatrix matrix) {
+    static void AdjointInverse(SquareMatrix matrix) {
         SquareMatrix adjoint = Operations.getAdjoint(matrix);
         double multiplier = 1/Determinant.CofactorExpansionDeterminant(matrix); //Menghitung 1/det
         Operations.scalarMultiplication(adjoint, multiplier); //Mengalikan adj dengan 1/det
-        return adjoint;
+        Operations.printMatrix(adjoint);
     }
 
-    static SquareMatrix RowOperationInverse(SquareMatrix matrix) {
+    static void RowOperationInverse(SquareMatrix matrix) {
 
         // Menginisialisasi matriks identitas
         SquareMatrix identity = new SquareMatrix();
@@ -26,7 +26,7 @@ public class Inverse {
 
         if (Determinant.RowReductionDeterminant(matrix) == 0) {
             System.out.println("Matrix tidak memiliki invers");
-            return matrix;
+            return;
         }
 
         for(int idx = 0; idx < matrix.getDimension(); idx++) {
@@ -72,6 +72,6 @@ public class Inverse {
         }
 
         // Operasi OBE selesai
-        return identity;
+        Operations.printMatrix(identity);
     }
 }
