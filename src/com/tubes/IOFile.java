@@ -28,16 +28,35 @@ public class IOFile {
             row = 0;
             col = 0;
             while (fileReader.hasNextLine()) {
+                row++;
+//                Scanner colReader = new Scanner(fileReader.nextLine());
+//                while(colReader.hasNextDouble()) {
+//                    col++;
+//                }
                 String[] line = fileReader.nextLine().trim().split(" ");
                 for (j = 0; j < line.length; j++) {
-                    matriks.setElmt(i, j, Double.parseDouble(line[j]));
-                    col = j;
+                    col++;
                 }
-                i++;
             }
-            row = i;
-            matriks.setNcol(col);
-            matriks.setNrow(row);
+
+            matriks.makeMatrix(row, col);
+
+            for (i = 0; i < row; i++) {
+                Scanner colReader = new Scanner(fileReader.nextLine());
+                for (j = 0; j < col; j++) {
+                    if (colReader.hasNextDouble()) {
+                        matriks.setElmt(i, j, colReader.nextDouble());
+                    }
+                }
+            }
+//            while (fileReader.hasNextLine()) {
+//                String[] line = fileReader.nextLine().trim().split(" ");
+//                for (j = 0; j < line.length; j++) {
+//                    matriks.setElmt(i, j, Double.parseDouble(line[j]));
+//                    col = j;
+//                }
+//                i++;
+//            }
         } catch (FileNotFoundException ex) {
             System.out.println("File " + fileName + " was not found.");
         }
@@ -70,7 +89,6 @@ public class IOFile {
                         myWriter.write("%n");
                     }
                 }
-                myWriter.close();
             } catch (FileNotFoundException ex) {
                 System.out.println("File " + fileName + " was not found.");
             }
