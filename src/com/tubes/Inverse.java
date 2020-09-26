@@ -32,6 +32,28 @@ public class Inverse {
         for(int idx = 0; idx < matrix.getDimension(); idx++) {
             double temp = matrix.getElmt(idx, idx); //Menginisialisasi nilai temp dengan elemen diagonal
 
+            //Melakukan pertukaran baris jika elemen diagonal ada yang bernilai 0
+            if (temp == 0) {
+                int i = idx + 1;
+                while (i < matrix.getDimension()) {
+                    if (matrix.getElmt(i, idx) != 0) {
+                        //Melakukan pertukaran baris
+                        for(int j = 0; j < matrix.getDimension(); j++) {
+                            //Menukar baris pada matrix
+                            Operations.swapRow(idx, i, matrix);
+
+                            //Menukar baris pada matrix identitas
+                            Operations.swapRow(idx, i, identity);
+                        }
+                        break;
+                    }
+                    i++;
+                }
+            }
+
+            //Menginisialisasi temp kembali jika terjadi pertukaran baris
+            temp = matrix.getElmt(idx, idx);
+
             //Membagi seluruh baris dengan temp, agar elemen diagonal menjadi 1
             for(int i = 0; i < matrix.getDimension(); i++) {
                 matrix.setElmt(idx, i, matrix.getElmt(idx, i)/temp);
