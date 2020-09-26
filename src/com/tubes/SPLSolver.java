@@ -20,6 +20,7 @@ public class SPLSolver {
             System.out.println();
         } else{
             System.out.println("Many solutions");
+            Operations.printMatrix(matrix);
             translator(matrix);
         }
     }
@@ -124,8 +125,7 @@ public class SPLSolver {
             System.out.println(y);
             System.out.println();
         } else{
-            System.out.println("Many solutions, interpolation cannot be determined");
-            translator(matrix);
+            System.out.println("Many solutions, regression cannot be determined");
         }
     }
 
@@ -392,8 +392,21 @@ public class SPLSolver {
             boolean found = false;
             for(int x=row-1;x>-1;x--){
                 if(Operations.roundAvoid(matrix.getElmt(x,y), 15)==1){
-                    found = true;
-                    break;
+                    if(y == 0) {
+                        found = true;
+                        break;
+                    } else {
+                        boolean isLeading = true;
+                        for(int e = y; e >= 0; e--) {
+                            if(matrix.getElmt(x,e) != 0) {
+                                isLeading = false;
+                            }
+                        }
+                        if(isLeading) {
+                            found = true;
+                            break;
+                        }
+                    }
                 }
             }
             if(found){
@@ -472,6 +485,7 @@ public class SPLSolver {
         for(int e=0;e<matrix.getNcol()-1;e++){
             if(Operations.roundAvoid(matrix.getElmt(row,e),15)==1){
                 stringify += "x" + (e + 1);
+                break;
             }
         }
         if(matrix.getElmt(row, matrix.getNcol()-1) != 0){
@@ -594,6 +608,7 @@ public class SPLSolver {
                             }
                         }
                     }
+                    j++;
                 }
             }
 

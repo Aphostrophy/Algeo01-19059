@@ -27,7 +27,6 @@ public class Determinant {
             }
         }
 
-        Operations.printMatrix(matrix);
         det = 1;
         for(int j=0;j<n;j++){
             det *= matrix.getElmt(j,j);

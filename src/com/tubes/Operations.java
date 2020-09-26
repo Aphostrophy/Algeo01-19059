@@ -151,7 +151,7 @@ public class Operations {
         adjointMatrix.makeMatrix(matrix.getDimension());
         for(int i = 0; i < matrix.getDimension(); i++) {
             for(int j = 0; j < matrix.getDimension(); j++) {
-                cofactorMatrix.setElmt(i, j, Determinant.CofactorExpansionDeterminant(cofactor(matrix, i, j)));
+                cofactorMatrix.setElmt(i, j, Math.pow(-1, i+j)*Determinant.CofactorExpansionDeterminant(cofactor(matrix, i, j)));
             }
         }
         adjointMatrix = transpose(cofactorMatrix);

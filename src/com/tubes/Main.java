@@ -50,11 +50,13 @@ public class Main {
                         SPL.gaussDriver(matrixSPL);
                     } else if(op==2) {
                         System.out.println("Metode eliminasi Gauss-Jordan");
-                        SPL.gaussJordanSolver(matrixSPL);
+                        SPLSolver.gaussJordanSolver(matrixSPL);
                     } else if(op==3) {
                         System.out.println("Metode matriks balikan");
+                        SPL.inversSPL(matrixSPL);
                     } else if(op==4) {
                         System.out.println("Kaidah crammer");
+                        SPL.cramerSPL(matrixSPL);
                     } else{
                         System.out.println("Input salah");
                     }
