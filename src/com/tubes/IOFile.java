@@ -78,7 +78,7 @@ public class IOFile {
                     }
                     myWriter.write(line);
                     if (i != matriks.getNrow() - 1) {
-                        myWriter.write("%n");
+                        myWriter.write("\n");
                     }
                 }
             } catch (FileNotFoundException ex) {
