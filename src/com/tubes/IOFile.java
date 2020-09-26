@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class IOFile {
 
-    static void fileToMatriks(Matrix matriks, String fileName) {
+    static void fileToMatriks(Matrix matriks, String fileName) throws IOException {
         /* I.S. matriks sembarang */
         /* F.S. terbentuk matriks dari file yang dibaca */
         // Proses. Membaca file baris perbaris dan mengubahnya persatuan float
@@ -23,40 +23,32 @@ public class IOFile {
 
         // ALGORITMA
         // baca input file
-        try (Scanner fileReader= new Scanner(new BufferedReader(new FileReader(fileName)))) {
-            i = 0;
+        try {
             row = 0;
             col = 0;
-            while (fileReader.hasNextLine()) {
+            String line;
+            // Read file
+            BufferedReader br = new BufferedReader(new FileReader(fileName));
+            while ((line = br.readLine()) != null) {
+                String[] colReader = line.split(" ");
+                col = colReader.length;
                 row++;
-//                Scanner colReader = new Scanner(fileReader.nextLine());
-//                while(colReader.hasNextDouble()) {
-//                    col++;
-//                }
-                String[] line = fileReader.nextLine().trim().split(" ");
-                for (j = 0; j < line.length; j++) {
-                    col++;
-                }
             }
+            br.close(); // close the file reader
 
-            matriks.makeMatrix(row, col);
+            matriks.makeMatrix(row, col); // make empty matrix row x col
 
-            for (i = 0; i < row; i++) {
-                Scanner colReader = new Scanner(fileReader.nextLine());
-                for (j = 0; j < col; j++) {
-                    if (colReader.hasNextDouble()) {
-                        matriks.setElmt(i, j, colReader.nextDouble());
-                    }
+            // Re-read file from beginning
+            br = new BufferedReader(new FileReader(fileName));
+            i = 0;
+            while ((line = br.readLine()) != null) {
+                String[] colReader = line.split(" ");
+                for (j = 0; j < colReader.length; j++) {
+                    matriks.setElmt(i, j, Double.valueOf(colReader[j]));
                 }
+                i++;
             }
-//            while (fileReader.hasNextLine()) {
-//                String[] line = fileReader.nextLine().trim().split(" ");
-//                for (j = 0; j < line.length; j++) {
-//                    matriks.setElmt(i, j, Double.parseDouble(line[j]));
-//                    col = j;
-//                }
-//                i++;
-//            }
+            br.close(); // close the file reader
         } catch (FileNotFoundException ex) {
             System.out.println("File " + fileName + " was not found.");
         }
