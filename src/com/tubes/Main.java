@@ -89,7 +89,7 @@ public class Main {
                 case 5:
                     System.out.println("Regresi Linear Berganda");
                     break;
-                    
+
                 case 6:
                     System.out.println("Exiting...");
                     exit = true;
