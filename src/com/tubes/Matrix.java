@@ -9,7 +9,6 @@ public class Matrix {
         this.n_row = n_row;
         this.n_col = n_col;
         this.Matrix = new double[n_row][n_col];
-        System.out.println("Matrix created");
     }
 
     public double getElmt(int row, int col){ return Matrix[row][col]; }

@@ -12,6 +12,15 @@ public class Inverse {
     static void RowOperationInverse(SquareMatrix matrix) {
 
         // Menginisialisasi matriks identitas
+        SquareMatrix detMatrix = new SquareMatrix();
+        detMatrix.makeMatrix(matrix.getDimension());
+        // Menyalin isi matrix ke detMatrix
+        for(int i = 0; i < matrix.getDimension(); i++) {
+            for(int j = 0; j < matrix.getDimension(); j++) {
+                detMatrix.setElmt(i, j, matrix.getElmt(i, j));
+            }
+        }
+
         SquareMatrix identity = new SquareMatrix();
         identity.makeMatrix(matrix.getDimension());
         for(int i = 0; i < identity.getDimension(); i++) {
@@ -24,7 +33,7 @@ public class Inverse {
             }
         }
 
-        if (Determinant.RowReductionDeterminant(matrix) == 0) {
+        if (Determinant.RowReductionDeterminant(detMatrix) == 0) {
             System.out.println("Matrix tidak memiliki invers");
             return;
         }
@@ -38,13 +47,10 @@ public class Inverse {
                 while (i < matrix.getDimension()) {
                     if (matrix.getElmt(i, idx) != 0) {
                         //Melakukan pertukaran baris
-                        for(int j = 0; j < matrix.getDimension(); j++) {
-                            //Menukar baris pada matrix
-                            Operations.swapRow(idx, i, matrix);
-
-                            //Menukar baris pada matrix identitas
-                            Operations.swapRow(idx, i, identity);
-                        }
+                        //Menukar baris pada matrix
+                        Operations.swapRow(i, idx, matrix);
+                        //Menukar baris pada matrix identitas
+                        Operations.swapRow(i, idx, identity);
                         break;
                     }
                     i++;
@@ -62,11 +68,13 @@ public class Inverse {
 
             //Melakukan operasi Pengurangan baris OBE untuk mendapatkan nilai 0 di elemen bukan diagonal
             for(int i = 0; i < matrix.getDimension(); i++) {
-                temp = matrix.getElmt(i, idx);
+                double multiplier = matrix.getElmt(i, idx);
                 for(int j = 0; j < matrix.getDimension(); j++) {
-                    if(i == idx) break; //Menghindari pengurangan terhadap elemen diagonal
-                    matrix.setElmt(i, j, matrix.getElmt(i, j) - matrix.getElmt(idx, j)*temp);
-                    identity.setElmt(i, j, identity.getElmt(i, j) - identity.getElmt(idx, j)*temp);
+                    if(i == idx) {
+                        break;
+                    } //Menghindari pengurangan terhadap elemen diagonal
+                    matrix.setElmt(i, j, matrix.getElmt(i, j) - matrix.getElmt(idx, j)*multiplier);
+                    identity.setElmt(i, j, identity.getElmt(i, j) - identity.getElmt(idx, j)*multiplier);
                 }
             }
         }

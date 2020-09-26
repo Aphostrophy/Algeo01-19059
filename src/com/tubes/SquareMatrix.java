@@ -9,7 +9,6 @@ public class SquareMatrix {
     public void makeMatrix(int dimension){
         this.dimension = dimension;
         this.Matrix = new double[this.dimension][this.dimension];
-        System.out.println("Matrix created");
     }
 
     public int getDimension() {
