@@ -74,6 +74,61 @@ public class SPLSolver {
         }
     }
 
+    public void gaussDriverRegression(Matrix matrix, int n){
+        double[] x = new double[n];
+        double y;
+        y = 0;
+        Matrix M;
+        Scanner scanner = new Scanner(System.in);
+        M = gauss(matrix);
+        int mark = validateGaussMatrix(M);
+        if(mark==0){
+            System.out.println("No possible solution");
+        } else if(mark==1){
+            System.out.println("Solutions can be determined");
+            Vector<Double> solutions = new Vector<>();
+            String equation = "y = ";
+            solutions = singleSolutionReturn(matrix);
+            System.out.println(solutions);
+            for(int i=solutions.size()-1;i>-1;i--){
+                if(i==solutions.size()-1){
+                    equation += String.valueOf(solutions.get(i));
+                } else {
+                    if(solutions.get(i) > 0){
+                        equation += "+" + solutions.get(i) + "x" + (solutions.size()-1-i);
+                    } else if(solutions.get(i) < 0){
+                        equation += solutions.get(i) + "x" + (solutions.size()-1-i);
+                    }
+                }
+            }
+            System.out.println(equation);
+            for(int i = 0; i < n; i++) {
+                System.out.print("Input x" + i+1 + ": ");
+                x[i] = scanner.nextDouble();
+            }
+            for(int i=solutions.size()-1;i>-1;i--){
+                if(i==solutions.size()-1){
+                    y += solutions.get(i);
+                } else {
+                    y += solutions.get(i)*x[i];
+                }
+            }
+            System.out.print("y(");
+            for(int i = 0; i < n; i++) {
+                if(i != n-1) {
+                    System.out.print("x" + i + ", ");
+                } else {
+                    System.out.print("x" + i + ") = ");
+                }
+            }
+            System.out.println(y);
+            System.out.println();
+        } else{
+            System.out.println("Many solutions, interpolation cannot be determined");
+            translator(matrix);
+        }
+    }
+
     static Matrix gauss(Matrix matrix){
         int n_row = matrix.getNrow();
         int n_col = matrix.getNcol();
@@ -438,5 +493,177 @@ public class SPLSolver {
             stringify += "0";
         }
         return stringify;
+    }
+
+    static void gaussJordanSolver (Matrix matrix) {
+        int[] countVarBrs = new int[matrix.getNrow()]; // Array untuk menampung jumlah variabel yg terdefinisi tiap barisnya setelah OBE
+        boolean[] definedVar = new boolean[matrix.getNcol()-1]; // Array untuk menyimpan apakah setiap variabel terdefinisi setelaj OBE
+        boolean solvable = false; // Variabel yang menyatakan SPL solvable atau tidak
+
+        // Inisialisasi array countVarBrs
+        for(int i = 0; i < matrix.getNrow(); i++) {
+            countVarBrs[i] = 0;
+        }
+        for(int i = 0; i < matrix.getNcol()-1; i++) {
+            definedVar[i] = false;
+        }
+
+        // Awal operasi OBE
+        int idxRow = 0;
+        int idxCol = 0;
+
+        while(idxRow < matrix.getNrow() && idxCol < matrix.getNcol()) {
+            double temp = matrix.getElmt(idxRow, idxCol);
+
+            // Jika elemen paling calon ledaing one matriks merupakan 0, lakukan swap baris
+            if(temp == 0) {
+                int i = idxRow + 1;
+                while(i < matrix.getNrow()) {
+                    if(matrix.getElmt(i, idxRow) != 0) {
+                        Operations.swapRow(i, idxRow, matrix);
+                        break;
+                    }
+                    i++;
+                }
+                if(i == matrix.getNrow()) { // Jika semua baris dibawahnya sudah bernilai 0, lanjutkan ke kolom berikutnya
+                    idxCol++;
+                    continue;
+                }
+            }
+
+            // Menginisialisasi kembali nilai temp dengan elemen matriks yang akan dijadikan leading one
+            temp = matrix.getElmt(idxRow, idxCol);
+
+            // Membagi seluruh baris dengan temp
+            for(int j = 0; j < matrix.getNcol(); j++) {
+                matrix.setElmt(idxRow, j, matrix.getElmt(idxRow, j) / temp);
+            }
+
+            // Melakukan pengurangan baris untuk mendapatkan matriks eselon baris tereduksi
+            for(int i = 0; i < matrix.getNrow(); i++) {
+                temp = matrix.getElmt(i, idxCol);
+                for(int j = 0; j < matrix.getNcol(); j++) {
+                    if(i == idxRow) { // Tidak boleh melakukan pengurangan terhadap diri sendiri
+                        break;
+                    } else {
+                        matrix.setElmt(i, j, matrix.getElmt(i, j) - (matrix.getElmt(idxRow, j)*temp));
+                    }
+                }
+            }
+
+            // Melanjutkan ke baris berikutnya
+            idxRow++;
+            idxCol++;
+        }
+
+        // Mencari tahu apakah SPL ada solusinya atau tidak
+        if(matrix.getElmt(matrix.getNrow()-1, matrix.getNcol()-1) != 0) {
+            for(int j = 0; j < matrix.getNcol()-1; j++) {
+                if(matrix.getElmt(matrix.getNrow()-1, j) != 0) {
+                    solvable = true;
+                }
+            }
+        } else {
+            solvable = true;
+        }
+
+        // Menghitung jumlah variabel yang tidak 0 dalam setiap baris
+        for(int i = 0; i < matrix.getNrow(); i++) {
+            for(int j = 0; j < matrix.getNcol(); j++) {
+                if(matrix.getElmt(i, j) != 0) {
+                    countVarBrs[i]++;
+                }
+            }
+        }
+
+        // Proses mencetak solusi
+        if(!solvable) {
+            System.out.println("SPL tidak memiliki solusi");
+        } else {
+            // Mengganti variabel dependen dengan variabel lain jika SPL memilki banyak solusi
+            for(int i = 0; i < matrix.getNrow(); i++) {
+                int abjad = 0;
+                int j = 0;
+                while (j < matrix.getNcol()-1) {
+                    if(matrix.getElmt(i, j) != 0) {
+                        for(int k = j+1; k < matrix.getNcol()-1; k++) {
+                            if(matrix.getElmt(i, k) != 0 && !definedVar[k]) {
+                                System.out.println("x" + k + " = " + (char)(119-abjad));
+                                abjad++;
+                                definedVar[k] = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Mencetak solusi independen
+            for(int i = 0; i < matrix.getNrow(); i++) {
+                int j = 0;
+                int abjad = 0;
+                int temp = countVarBrs[i];
+                boolean allZero = true; // Variabel yang menyatakan apakah suatu baris setelah OBE bernilai 0 semua atau tidak
+
+                while (j < matrix.getNcol()-1) {
+                    // Jika b[j] != 0
+                    if(matrix.getElmt(i, matrix.getNcol()-1) != 0) {
+                        allZero = false;
+
+                        // Mencetak variabel pertama yg terdefinsi dalam baris besert b[j]
+                        if(matrix.getElmt(i, j) != 0 && temp == countVarBrs[i]) {
+                            System.out.print("x" + j + " = " + matrix.getElmt(i, matrix.getNcol()-1));
+                            definedVar[j] = true;
+                            temp--;
+                        }
+
+                        // Mencetak sisa variabel yang dipindahruaskan
+                        else if(matrix.getElmt(i, j) != 0) {
+                            if(matrix.getElmt(i, j) >= 0) {
+                                System.out.print(" - " + matrix.getElmt(i, j) + (char)(119-abjad));
+                                abjad++;
+                            } else {
+                                System.out.print(" + " + (-1*matrix.getElmt(i, j)) + (char)(119-abjad));
+                                abjad++;
+                            }
+                            temp--;
+                        }
+                        j++;
+                    } else { // b[j] == 0
+                        // Mencetak variabel pertama yang terdefinisi, b[j], dan sisa variabel terdefinsi dalam baris yang sudah dipindahruaskan
+                        if(matrix.getElmt(i, j) != 0 && temp == countVarBrs[i]) {
+                            allZero = false;
+                            System.out.print("x" + j + " = ");
+                            definedVar[j] = true;
+
+                            // Jika hanya ada 1 variabel terdefinisi dalam baris, cetak 0
+                            if(countVarBrs[i] == 1) {
+                                System.out.print(0);
+                            } else if(matrix.getElmt(i, j) >= 0) {
+                                System.out.print("-" + matrix.getElmt(i, j) + (char)(119-abjad));
+                                abjad++;
+                            } else {
+                                System.out.print((-1*matrix.getElmt(i, j)) + (char)(119-abjad));
+                                abjad++;
+                            }
+                            temp -= 2;
+                            j++;
+                        } else if(matrix.getElmt(i, j) != 0) {
+                            allZero = false;
+                            if(matrix.getElmt(i, j) >= 0) {
+                                System.out.print(" - " + matrix.getElmt(i, j) + (char)(119-abjad));
+                                abjad++;
+                            } else {
+                                System.out.print(" + " + (-1*matrix.getElmt(i, j)) + (char)(119-abjad));
+                                abjad++;
+                            }
+                            temp--;
+                        }
+                        j++;
+                    }
+                }
+                if(allZero) {break;}
+                else {System.out.println("");}
+            }
+        }
     }
 }

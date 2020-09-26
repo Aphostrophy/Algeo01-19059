@@ -88,6 +88,13 @@ public class Main {
 
                 case 5:
                     System.out.println("Regresi Linear Berganda");
+                    Scanner q = new Scanner(System.in);
+                    Regresi regresi = new Regresi();
+                    System.out.print("Jumlah variabel penentu: ");
+                    int var = q.nextInt();
+                    System.out.print("Jumlah sampel data: ");
+                    int data = q.nextInt();
+                    regresi.driverManual(var, data);
                     break;
                     
                 case 6:

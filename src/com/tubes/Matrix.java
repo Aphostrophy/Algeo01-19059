@@ -12,9 +12,7 @@ public class Matrix {
         System.out.println("Matrix created");
     }
 
-    public double getElmt(int row, int col){
-        return Matrix[row][col];
-    }
+    public double getElmt(int row, int col){ return Matrix[row][col]; }
 
     public void setElmt(int row, int col, double Elmt){
         this.Matrix[row][col] = Elmt;
