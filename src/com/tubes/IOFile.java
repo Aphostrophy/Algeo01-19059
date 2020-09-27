@@ -54,6 +54,46 @@ public class IOFile {
         }
     }
 
+    static void fileToMatriks(SquareMatrix matriks, String fileName) throws IOException {
+        /* I.S. matriks sembarang */
+        /* F.S. terbentuk matriks dari file yang dibaca */
+        // Proses. Membaca file baris perbaris dan mengubahnya persatuan float
+        // KAMUS CEUNAH
+        int i;
+        int j;
+        int dim;
+
+        // ALGORITMA
+        // baca input file
+        try {
+            dim = 0;
+            String line;
+            // Read file
+            BufferedReader br = new BufferedReader(new FileReader(fileName));
+            while ((line = br.readLine()) != null) {
+                String[] colReader = line.split(" ");
+                dim = colReader.length;
+            }
+            br.close(); // close the file reader
+
+            matriks.makeMatrix(dim); // make empty matrix row x col
+
+            // Re-read file from beginning
+            br = new BufferedReader(new FileReader(fileName));
+            i = 0;
+            while ((line = br.readLine()) != null) {
+                String[] colReader = line.split(" ");
+                for (j = 0; j < colReader.length; j++) {
+                    matriks.setElmt(i, j, Double.valueOf(colReader[j]));
+                }
+                i++;
+            }
+            br.close(); // close the file reader
+        } catch (FileNotFoundException ex) {
+            System.out.println("File " + fileName + " was not found.");
+        }
+    }
+
     static void matriksToFile(Matrix matriks, String fileName) {
         // KAMUS
         int i;
