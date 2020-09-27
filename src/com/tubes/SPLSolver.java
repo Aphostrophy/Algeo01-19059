@@ -1,5 +1,7 @@
 package com.tubes;
 
+import jdk.dynalink.Operation;
+
 import java.util.Scanner;
 import java.util.Vector;
 
@@ -243,10 +245,14 @@ public class SPLSolver {
         int i;
         int j;
 
+        // inisiasi matriks
+        matriksA.makeMatrix(m.getNrow());
+        matriksB.makeMatrix(m.getNrow(), 1);
+
         // matrix augmented menjadi matriks biasa
-        for (i = 0; i < m.getNrow() - 1; i++) {
-            for (j = 0; j < m.getNcol() - 1; j++) {
-                if (j != m.getNcol()-1) {
+        for (i = 0; i < m.getNrow(); i++) {
+            for (j = 0; j < m.getNcol(); j++) {
+                if (j != m.getNcol() - 1) {
                     matriksA.setElmt(i, j, m.getElmt(i, j));
                 } else {
                     matriksB.setElmt(i, 0, m.getElmt(i, j));
@@ -277,17 +283,17 @@ public class SPLSolver {
         extractAug(m, matriksA, matriksB);
 
         // inisialisasi matriks penyimpan hasil
-        hasilMatriks.setNcol(1);
-        hasilMatriks.setNrow(matriksA.getDimension());
+        hasilMatriks.makeMatrix(matriksA.getDimension(), 1);
 
         // operasi SPL Cramer
-        temp.setDimension(m.getNrow());
-        xi = 0;
+        temp.makeMatrix(m.getNrow());
         detA = Determinant.RowReductionDeterminant(matriksA);
+        System.out.println(detA);
+
         if (detA != 0) {
-            for (curCol = 0; curCol < matriksA.getDimension() - 1; curCol++) {
-                for (i = 0; i < matriksA.getDimension() - 1; i++) {
-                    for (j = 0; j < matriksA.getDimension() - 1; j++) {
+            for (curCol = 0; curCol < matriksA.getDimension(); curCol++) {
+                for (i = 0; i < matriksA.getDimension(); i++) {
+                    for (j = 0; j < matriksA.getDimension(); j++) {
                         if (j == curCol) {
                             temp.setElmt(i, j, matriksB.getElmt(i, 0));
                         } else {
@@ -299,15 +305,13 @@ public class SPLSolver {
                 hasilMatriks.setElmt(curCol, 0, xi);
             }
 
-            for (i = 0; i < hasilMatriks.getNrow() - 1; i++) {
-                System.out.println("x " + (i + 1) + " : " + hasilMatriks.getElmt(i, 0));
+            for (i = 0; i < hasilMatriks.getNrow(); i++) {
+                System.out.println("x" + (i + 1) + " = " + hasilMatriks.getElmt(i, 0));
             }
 
         } else {
             System.out.println("Determinan 0, SPL tidak memiliki solusi unik.");
         }
-
-        
     }
 
     // SPL Invers Matrix
@@ -329,21 +333,20 @@ public class SPLSolver {
         Inverse.RowOperationInverse(matriksA);
         
         // inisialisasi matriks penyimpan hasil
-        hasilMatriks.setNcol(1);
-        hasilMatriks.setNrow(matriksA.getDimension());
+        hasilMatriks.makeMatrix(matriksA.getDimension(), 1);
 
-        for (i = 0; i < matriksA.getDimension() - 1; i++) {
-            for (j = 0; j < matriksA.getDimension() - 1; j++) {
+        for (i = 0; i < matriksA.getDimension(); i++) {
+            for (j = 0; j < matriksA.getDimension(); j++) {
                 hasil = 0;
-                for (k = 0; k < matriksA.getDimension() - 1; k++) {
+                for (k = 0; k < matriksA.getDimension(); k++) {
                     hasil += matriksA.getElmt(i, k) * matriksB.getElmt(k, 0);
                 }
                 hasilMatriks.setElmt(i, 0, hasil);
             }
         }
         
-        for (i = 0; i < hasilMatriks.getNrow() - 1; i++) {
-            System.out.println("x " + (i + 1) + " : " + hasilMatriks.getElmt(i, 0));
+        for (i = 0; i < hasilMatriks.getNrow(); i++) {
+            System.out.println("x" + (i + 1) + " = " + hasilMatriks.getElmt(i, 0));
         }
     }
 
