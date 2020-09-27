@@ -38,7 +38,6 @@ public class Main {
                     } else if (ops == 2) {
                         // input nama file
                         System.out.print("Masukkan nama file :\n");
-
                         Scanner inputFileName = new Scanner(System.in);
                         String namaFile = inputFileName.nextLine();
                         IOFile.fileToMatriks(matrixSPL, namaFile);
@@ -67,12 +66,23 @@ public class Main {
 
                 case 2:
                     System.out.println("Determinan");
-                    System.out.print("Enter the matrix dimension (nxn) : ");
-                    dimension = input.nextInt();
                     SquareMatrix matrix = new SquareMatrix();
-                    matrix.makeMatrix(dimension);
-                    Operations.fillMatrix(matrix);
-                    Operations.printMatrix(matrix);
+                    System.out.println("1. Manual Input\n" +
+                            "2. Upload file");
+                    ops = input.nextInt();
+                    if(ops==1) {
+                        System.out.print("Enter the matrix dimension (nxn) : ");
+                        dimension = input.nextInt();
+                        matrix.makeMatrix(dimension);
+                        Operations.fillMatrix(matrix);
+                        Operations.printMatrix(matrix);
+                    } else if (ops == 2) {
+                        // input nama file
+                        System.out.print("Masukkan nama file :\n");
+                        Scanner inputFileName = new Scanner(System.in);
+                        String namaFile = inputFileName.nextLine();
+                        IOFile.fileToMatriks(matrix, namaFile);
+                    }
                     double det = Determinant.RowReductionDeterminant(matrix);
                     System.out.println("The determinant value is " + det);
                     det = Determinant.CofactorExpansionDeterminant(matrix);
