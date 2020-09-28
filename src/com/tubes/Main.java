@@ -42,6 +42,8 @@ public class Main {
                         String namaFile = inputFileName.nextLine();
                         IOFile.fileToMatriks(matrixSPL, namaFile);
                     }
+                    Operations.printMatrix(matrixSPL);
+
                     System.out.println("1. Metode Eliminasi Gauss\n" +
                             "2. Metode eliminasi Gauss-Jordan\n" +
                             "3. Metode matriks balikan\n" +
@@ -55,10 +57,10 @@ public class Main {
                         SPLSolver.gaussJordanSolver(matrixSPL);
                     } else if(op==3) {
                         System.out.println("Metode matriks balikan");
-                        SPL.inversSPL(matrixSPL);
+                        SPLSolver.inversSPL(matrixSPL);
                     } else if(op==4) {
                         System.out.println("Kaidah crammer");
-                        SPL.cramerSPL(matrixSPL);
+                        SPLSolver.cramerSPL(matrixSPL);
                     } else{
                         System.out.println("Input salah");
                     }
@@ -75,7 +77,6 @@ public class Main {
                         dimension = input.nextInt();
                         matrix.makeMatrix(dimension);
                         Operations.fillMatrix(matrix);
-                        Operations.printMatrix(matrix);
                     } else if (ops == 2) {
                         // input nama file
                         System.out.print("Masukkan nama file :\n");
@@ -83,6 +84,8 @@ public class Main {
                         String namaFile = inputFileName.nextLine();
                         IOFile.fileToMatriks(matrix, namaFile);
                     }
+                    Operations.printMatrix(matrix);
+
                     double det = Determinant.RowReductionDeterminant(matrix);
                     System.out.println("The determinant value is " + det);
                     det = Determinant.CofactorExpansionDeterminant(matrix);
@@ -91,11 +94,23 @@ public class Main {
 
                 case 3:
                     System.out.println("Matriks Balikan");
-                    System.out.print("Enter the matrix dimension (nxn) : ");
-                    dimension = input.nextInt();
                     SquareMatrix matrixInverse = new SquareMatrix();
-                    matrixInverse.makeMatrix(dimension);
-                    Operations.fillMatrix(matrixInverse);
+                    System.out.println("1. Manual Input\n" +
+                            "2. Upload file");
+                    ops = input.nextInt();
+                    if (ops == 1) {
+                        System.out.print("Enter the matrix dimension (nxn) : ");
+                        dimension = input.nextInt();
+                        matrixInverse.makeMatrix(dimension);
+                        Operations.fillMatrix(matrixInverse);
+                    } else if (ops == 2) {
+                        // input nama file
+                        System.out.print("Masukkan nama file :\n");
+                        Scanner inputFileName = new Scanner(System.in);
+                        String namaFile = inputFileName.nextLine();
+                        IOFile.fileToMatriks(matrixInverse, namaFile);
+                    }
+
                     Operations.printMatrix(matrixInverse);
                     System.out.println("Invers Matriks: ");
                     Inverse.AdjointInverse(matrixInverse);
@@ -105,11 +120,34 @@ public class Main {
 
                 case 4:
                     System.out.println("Interpolasi polinom");
-                    Scanner p = new Scanner(System.in);
-                    Interpolasi interpolasi = new Interpolasi();
-                    System.out.print("Jumlah titik: ");
-                    int n = p.nextInt();
-                    interpolasi.driverManual(n);
+                    System.out.println("1. Manual Input\n" +
+                            "2. Upload file");
+                    ops = input.nextInt();
+                    if (ops == 1) {
+                        System.out.print("Jumlah titik: ");
+                        Scanner p = new Scanner(System.in);
+                        int n = p.nextInt();
+                        Interpolasi interpolasi = new Interpolasi();
+                        interpolasi.driverManual(n);
+                    } else if (ops == 2) {
+                        // input nama file
+                        System.out.print("Masukkan nama file :\n");
+                        Scanner inputFileName = new Scanner(System.in);
+                        String namaFile = inputFileName.nextLine();
+                        Matrix matrixInterpolateIn = new Matrix();
+                        IOFile.fileToMatriks(matrixInterpolateIn, namaFile);
+
+                        // membuat matrixInterpolasi
+                        Matrix matrixInterpolateOut = new Matrix();
+                        matrixInterpolateOut.makeMatrix(matrixInterpolateIn.getNrow(),matrixInterpolateIn.getNrow()+1);
+                        Interpolasi.createPowMatrix(matrixInterpolateIn, matrixInterpolateOut);
+                        Operations.printMatrix(matrixInterpolateOut);
+
+                        // penghitungan
+                        SPLSolver solver = new SPLSolver();
+                        solver.gaussDriverInterpolation(matrixInterpolateOut);
+                    }
+
                     break;
 
                 case 5:

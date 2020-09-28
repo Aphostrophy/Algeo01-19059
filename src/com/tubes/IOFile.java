@@ -44,7 +44,7 @@ public class IOFile {
             while ((line = br.readLine()) != null) {
                 String[] colReader = line.split(" ");
                 for (j = 0; j < colReader.length; j++) {
-                    matriks.setElmt(i, j, Double.valueOf(colReader[j]));
+                    matriks.setElmt(i, j, Double.parseDouble(colReader[j]));
                 }
                 i++;
             }
@@ -84,7 +84,7 @@ public class IOFile {
             while ((line = br.readLine()) != null) {
                 String[] colReader = line.split(" ");
                 for (j = 0; j < colReader.length; j++) {
-                    matriks.setElmt(i, j, Double.valueOf(colReader[j]));
+                    matriks.setElmt(i, j, Double.parseDouble(colReader[j]));
                 }
                 i++;
             }
