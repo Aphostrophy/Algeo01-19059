@@ -419,7 +419,7 @@ public class SPLSolver {
                         break;
                     } else {
                         boolean isLeading = true;
-                        for(int e = y; e >= 0; e--) {
+                        for(int e = y-1; e >= 0; e--) {
                             if(matrix.getElmt(x,e) != 0) {
                                 isLeading = false;
                             }
@@ -437,6 +437,9 @@ public class SPLSolver {
                 dependent.add(y);
             }
         }
+
+        System.out.println(tempIndependent);
+        System.out.println(dependent);
 
         //Do backwards subtitution for dependents
         Matrix padding = new Matrix();
