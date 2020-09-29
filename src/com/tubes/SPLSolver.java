@@ -271,7 +271,7 @@ public class SPLSolver {
     }
 
     // SPL Cramer
-    static void cramerSPL(Matrix m) {
+    static void cramerSPL(Matrix m, Matrix mOut) {
         /* I.S. menerima sebuah matriks augmented AB */
         /* F.S. menampilkan hasil penghitungan SPL menggunakan cramer */
         /* Proses : membuat matriks temp dengan elemen yang disisipkan matriks B
@@ -284,7 +284,6 @@ public class SPLSolver {
         SquareMatrix temp = new SquareMatrix();
         SquareMatrix matriksA = new SquareMatrix();
         Matrix matriksB = new Matrix();
-        Matrix hasilMatriks = new Matrix();
         double xi;
         double detA;
 
@@ -293,7 +292,7 @@ public class SPLSolver {
         extractAug(m, matriksA, matriksB);
 
         // inisialisasi matriks penyimpan hasil
-        hasilMatriks.makeMatrix(matriksA.getDimension(), 1);
+        mOut.makeMatrix(matriksA.getDimension(), 1);
 
         // operasi SPL Cramer
         temp.makeMatrix(m.getNrow());
@@ -316,11 +315,11 @@ public class SPLSolver {
                 }
                 // menyimpan hasil perhitungan Determinan Ai / Determinan A
                 xi = Determinant.RowReductionDeterminant(temp) / detA;
-                hasilMatriks.setElmt(curCol, 0, xi);
+                mOut.setElmt(curCol, 0, xi);
             }
             // menampilkan hasil penghitungan
-            for (i = 0; i < hasilMatriks.getNrow(); i++) {
-                System.out.println("x" + (i + 1) + " = " + hasilMatriks.getElmt(i, 0));
+            for (i = 0; i < mOut.getNrow(); i++) {
+                System.out.println("x" + (i + 1) + " = " + mOut.getElmt(i, 0));
             }
         } else { // jika determinan matriks 0, tidak dapat dilakukan penghitungan
             System.out.println("Determinan 0, SPL tidak memiliki solusi unik.");

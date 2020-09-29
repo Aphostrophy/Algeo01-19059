@@ -46,6 +46,7 @@ public class Main {
                     }
                     Operations.printMatrix(matrixSPL);
 
+                    Matrix hasilMat = new Matrix();
                     System.out.println("1. Metode Eliminasi Gauss\n" +
                             "2. Metode eliminasi Gauss-Jordan\n" +
                             "3. Metode matriks balikan\n" +
@@ -62,10 +63,11 @@ public class Main {
                         SPLSolver.inversSPL(matrixSPL);
                     } else if(op==4) {
                         System.out.println("Kaidah crammer");
-                        SPLSolver.cramerSPL(matrixSPL);
+                        SPLSolver.cramerSPL(matrixSPL, hasilMat);
                     } else{
                         System.out.println("Input salah");
                     }
+                    OpsiPrintHasil(hasilMat);
                     break;
 
                 case 2:
@@ -93,6 +95,13 @@ public class Main {
                     System.out.println("The determinant value is " + det);
                     det = Determinant.CofactorExpansionDeterminant(matrix);
                     System.out.println("The determinant value is " + det);
+
+                    // hasil matriks untuk diprint
+                    hasilMat = new Matrix();
+                    hasilMat.makeMatrix(1, 1);
+
+                    hasilMat.setElmt(0, 0, det);
+                    OpsiPrintHasil(hasilMat);
                     break;
 
                 case 3:
@@ -232,7 +241,8 @@ public class Main {
         int ops = input.nextInt();
         if (ops == 1) {
             System.out.print("Masukkan nama file :\n");
-            String fileName = input.nextLine();
+            Scanner inputFileName = new Scanner(System.in);
+            String fileName = inputFileName.nextLine();
             IOFile.matriksToFile(matrix, fileName);
         }
     }
