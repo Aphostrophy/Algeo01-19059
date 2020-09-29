@@ -77,8 +77,7 @@ public class SPLSolver {
 
     public void gaussDriverRegression(Matrix matrix, int n){
         double[] x = new double[n];
-        double y;
-        y = 0;
+        double y = 0;
         Matrix M;
         Scanner scanner = new Scanner(System.in);
         M = gauss(matrix);
@@ -108,11 +107,13 @@ public class SPLSolver {
                 x[i] = scanner.nextDouble();
             }
             for(int i=solutions.size()-1;i>-1;i--){
+                int var = 0;
                 if(i==solutions.size()-1){
                     y += solutions.get(i);
                 } else {
-                    y += solutions.get(i)*x[i];
+                    y += solutions.get(i)*x[var];
                 }
+                var++;
             }
             System.out.print("y(");
             for(int i = 0; i < n; i++) {
@@ -617,7 +618,7 @@ public class SPLSolver {
                     if(matrix.getElmt(i, j) != 0) {
                         for(int k = j+1; k < matrix.getNcol()-1; k++) {
                             if(matrix.getElmt(i, k) != 0 && !definedVar[k]) {
-                                System.out.println("x" + k + " = " + (char)(119-abjad));
+                                System.out.println("x" + (k+1) + " = " + (char)(119-abjad));
                                 abjad++;
                                 definedVar[k] = true;
                             }
@@ -641,7 +642,7 @@ public class SPLSolver {
 
                         // Mencetak variabel pertama yg terdefinsi dalam baris besert b[j]
                         if(matrix.getElmt(i, j) != 0 && temp == countVarBrs[i]) {
-                            System.out.print("x" + j + " = " + matrix.getElmt(i, matrix.getNcol()-1));
+                            System.out.print("x" + (j+1) + " = " + matrix.getElmt(i, matrix.getNcol()-1));
                             definedVar[j] = true;
                             temp--;
                         }
@@ -662,7 +663,7 @@ public class SPLSolver {
                         // Mencetak variabel pertama yang terdefinisi, b[j], dan sisa variabel terdefinsi dalam baris yang sudah dipindahruaskan
                         if(matrix.getElmt(i, j) != 0 && temp == countVarBrs[i]) {
                             allZero = false;
-                            System.out.print("x" + j + " = ");
+                            System.out.print("x" + (j+1) + " = ");
                             definedVar[j] = true;
 
                             // Jika hanya ada 1 variabel terdefinisi dalam baris, cetak 0
