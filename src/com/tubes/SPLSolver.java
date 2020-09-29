@@ -160,6 +160,12 @@ public class SPLSolver {
         }
 
         for(int i=0;i<n_row;i++){
+            for(int j=0;j<n_col;j++){
+                matrix.setElmt(i,j, Operations.roundAvoid(matrix.getElmt(i,j), 12));
+            }
+        }
+
+        for(int i=0;i<n_row;i++){
             double multiplier = 0;
             for(int r=0;r<n_col;r++){
                 if(matrix.getElmt(i,r)!=0){
@@ -413,7 +419,7 @@ public class SPLSolver {
                         break;
                     } else {
                         boolean isLeading = true;
-                        for(int e = y; e >= 0; e--) {
+                        for(int e = y-1; e >= 0; e--) {
                             if(matrix.getElmt(x,e) != 0) {
                                 isLeading = false;
                             }
@@ -431,6 +437,9 @@ public class SPLSolver {
                 dependent.add(y);
             }
         }
+
+        System.out.println(tempIndependent);
+        System.out.println(dependent);
 
         //Do backwards subtitution for dependents
         Matrix padding = new Matrix();
