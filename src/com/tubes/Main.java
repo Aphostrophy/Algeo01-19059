@@ -198,6 +198,7 @@ public class Main {
                     }
                     regresi.driverManual(tabel, dataMatrix, var, nData);
 
+                    System.out.println("Matriks dari persamaan yang terbentuk : ");
                     Operations.printMatrix(dataMatrix);
                     SPLSolver solver = new SPLSolver();
                     solver.gaussDriverRegression(dataMatrix, var);

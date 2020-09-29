@@ -96,15 +96,15 @@ public class SPLSolver {
                     equation += String.valueOf(solutions.get(i));
                 } else {
                     if(solutions.get(i) > 0){
-                        equation += "+" + solutions.get(i) + "x" + (solutions.size()-1-i);
+                        equation += " + " + solutions.get(i) + "x" + (solutions.size()-1-i);
                     } else if(solutions.get(i) < 0){
-                        equation += solutions.get(i) + "x" + (solutions.size()-1-i);
+                        equation += " - " + (-1*solutions.get(i)) + "x" + (solutions.size()-1-i);
                     }
                 }
             }
             System.out.println(equation);
             for(int i = 0; i < n; i++) {
-                System.out.print("Input x" + i+1 + ": ");
+                System.out.print("Input x" + (i+1) + ": ");
                 x[i] = scanner.nextDouble();
             }
             for(int i=solutions.size()-1;i>-1;i--){
