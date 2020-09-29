@@ -527,7 +527,7 @@ public class SPLSolver {
 
     static void gaussJordanSolver (Matrix matrix) {
         int[] countVarBrs = new int[matrix.getNrow()]; // Array untuk menampung jumlah variabel yg terdefinisi tiap barisnya setelah OBE
-        boolean[] definedVar = new boolean[matrix.getNcol()-1]; // Array untuk menyimpan apakah setiap variabel terdefinisi setelaj OBE
+        char[] definedVar = new char[matrix.getNcol()-1]; // Array untuk menyimpan apakah setiap variabel terdefinisi setelaj OBE
         boolean solvable = false; // Variabel yang menyatakan SPL solvable atau tidak
 
         // Inisialisasi array countVarBrs
@@ -535,7 +535,7 @@ public class SPLSolver {
             countVarBrs[i] = 0;
         }
         for(int i = 0; i < matrix.getNcol()-1; i++) {
-            definedVar[i] = false;
+            definedVar[i] = ' ';
         }
 
         // Awal operasi OBE
@@ -580,6 +580,7 @@ public class SPLSolver {
                     }
                 }
             }
+            Operations.printMatrix(matrix);
 
             // Melanjutkan ke baris berikutnya
             idxRow++;
@@ -611,16 +612,16 @@ public class SPLSolver {
             System.out.println("SPL tidak memiliki solusi");
         } else {
             // Mengganti variabel dependen dengan variabel lain jika SPL memilki banyak solusi
+            int abjad = 0;
             for(int i = 0; i < matrix.getNrow(); i++) {
-                int abjad = 0;
                 int j = 0;
                 while (j < matrix.getNcol()-1) {
                     if(matrix.getElmt(i, j) != 0) {
                         for(int k = j+1; k < matrix.getNcol()-1; k++) {
-                            if(matrix.getElmt(i, k) != 0 && !definedVar[k]) {
+                            if(matrix.getElmt(i, k) != 0 && definedVar[k] == ' ') {
                                 System.out.println("x" + (k+1) + " = " + (char)(119-abjad));
+                                definedVar[k] = (char)(119-abjad);
                                 abjad++;
-                                definedVar[k] = true;
                             }
                         }
                     }
@@ -631,49 +632,48 @@ public class SPLSolver {
             // Mencetak solusi independen
             for(int i = 0; i < matrix.getNrow(); i++) {
                 int j = 0;
-                int abjad = 0;
                 int temp = countVarBrs[i];
                 boolean allZero = true; // Variabel yang menyatakan apakah suatu baris setelah OBE bernilai 0 semua atau tidak
 
-                while (j < matrix.getNcol()-1) {
-                    // Jika b[j] != 0
-                    if(matrix.getElmt(i, matrix.getNcol()-1) != 0) {
-                        allZero = false;
+                // Jika b[j] != 0
+                if(matrix.getElmt(i, matrix.getNcol()-1) != 0) {
+                    allZero = false;
+                    while(j < matrix.getNcol()-1) {
 
                         // Mencetak variabel pertama yg terdefinsi dalam baris besert b[j]
-                        if(matrix.getElmt(i, j) != 0 && temp == countVarBrs[i]) {
-                            System.out.print("x" + (j+1) + " = " + matrix.getElmt(i, matrix.getNcol()-1));
-                            definedVar[j] = true;
+                        if (matrix.getElmt(i, j) != 0 && temp == countVarBrs[i]) {
+                            System.out.print("x" + (j + 1) + " = " + matrix.getElmt(i, matrix.getNcol() - 1));
                             temp--;
                         }
 
                         // Mencetak sisa variabel yang dipindahruaskan
-                        else if(matrix.getElmt(i, j) != 0) {
-                            if(matrix.getElmt(i, j) >= 0) {
-                                System.out.print(" - " + matrix.getElmt(i, j) + (char)(119-abjad));
+                        else if (matrix.getElmt(i, j) != 0) {
+                            if (matrix.getElmt(i, j) >= 0) {
+                                System.out.print(" - " + matrix.getElmt(i, j) + definedVar[j]);
                                 abjad++;
                             } else {
-                                System.out.print(" + " + (-1*matrix.getElmt(i, j)) + (char)(119-abjad));
+                                System.out.print(" + " + (-1 * matrix.getElmt(i, j)) + definedVar[j]);
                                 abjad++;
                             }
                             temp--;
                         }
                         j++;
-                    } else { // b[j] == 0
+                    }
+                } else { // b[j] == 0
+                    while(j < matrix.getNcol()-1 && temp >= 0) {
                         // Mencetak variabel pertama yang terdefinisi, b[j], dan sisa variabel terdefinsi dalam baris yang sudah dipindahruaskan
                         if(matrix.getElmt(i, j) != 0 && temp == countVarBrs[i]) {
                             allZero = false;
                             System.out.print("x" + (j+1) + " = ");
-                            definedVar[j] = true;
-
+                            j++;
                             // Jika hanya ada 1 variabel terdefinisi dalam baris, cetak 0
                             if(countVarBrs[i] == 1) {
                                 System.out.print(0);
                             } else if(matrix.getElmt(i, j) >= 0) {
-                                System.out.print("-" + matrix.getElmt(i, j) + (char)(119-abjad));
+                                System.out.print("-" + matrix.getElmt(i, j) + definedVar[j]);
                                 abjad++;
                             } else {
-                                System.out.print((-1*matrix.getElmt(i, j)) + (char)(119-abjad));
+                                System.out.print((-1 * matrix.getElmt(i, j)) + "" + definedVar[j]);
                                 abjad++;
                             }
                             temp -= 2;
@@ -681,10 +681,10 @@ public class SPLSolver {
                         } else if(matrix.getElmt(i, j) != 0) {
                             allZero = false;
                             if(matrix.getElmt(i, j) >= 0) {
-                                System.out.print(" - " + matrix.getElmt(i, j) + (char)(119-abjad));
+                                System.out.print(" - " + matrix.getElmt(i, j) + definedVar[j]);
                                 abjad++;
                             } else {
-                                System.out.print(" + " + (-1*matrix.getElmt(i, j)) + (char)(119-abjad));
+                                System.out.print(" + " + (-1*matrix.getElmt(i, j)) + definedVar[j]);
                                 abjad++;
                             }
                             temp--;
