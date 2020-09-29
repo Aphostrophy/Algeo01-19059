@@ -1,5 +1,6 @@
 package com.tubes;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -28,9 +29,7 @@ public class Main {
                     SPLSolver SPL = new SPLSolver();
 
                     // jenis input
-                    System.out.println("1. Manual Input\n" +
-                            "2. Upload file");
-                    int ops = input.nextInt();
+                    int ops = OpsiInput();
                     if(ops==1) {
                         System.out.print("Baris: ");
                         nrow = input.nextInt();
@@ -75,9 +74,7 @@ public class Main {
                     SquareMatrix matrix = new SquareMatrix();
 
                     // jenis input
-                    System.out.println("1. Manual Input\n" +
-                            "2. Upload file");
-                    ops = input.nextInt();
+                    ops = OpsiInput();
                     if(ops==1) {
                         System.out.print("Enter the matrix dimension (nxn) : ");
                         dimension = input.nextInt();
@@ -104,9 +101,7 @@ public class Main {
                     SquareMatrix matrixInverse = new SquareMatrix();
 
                     // jenis input
-                    System.out.println("1. Manual Input\n" +
-                            "2. Upload file");
-                    ops = input.nextInt();
+                    ops = OpsiInput();
                     if (ops == 1) {
                         System.out.print("Enter the matrix dimension (nxn) : ");
                         dimension = input.nextInt();
@@ -131,9 +126,7 @@ public class Main {
                     System.out.println("Interpolasi polinom");
 
                     // jenis input
-                    System.out.println("1. Manual Input\n" +
-                            "2. Upload file");
-                    ops = input.nextInt();
+                    ops = OpsiInput();
                     if (ops == 1) {
                         System.out.print("Jumlah titik: ");
                         Scanner p = new Scanner(System.in);
@@ -170,9 +163,7 @@ public class Main {
                     int nData = 0;
 
                     // jenis input
-                    System.out.println("1. Manual Input\n" +
-                            "2. Upload file");
-                    ops = input.nextInt();
+                    ops = OpsiInput();
                     if (ops == 1) {
                         Scanner q = new Scanner(System.in);
                         System.out.print("Jumlah variabel penentu: ");
@@ -221,6 +212,27 @@ public class Main {
                     exit = true;
             }
 
+        }
+    }
+
+    static int OpsiInput() {
+        Scanner input = new Scanner(System.in);
+        System.out.println("1. Manual Input\n" +
+                "2. Upload file");
+        return input.nextInt();
+    }
+
+    static void OpsiPrintHasil(Matrix matrix) {
+        // Menawarkan menuliskan hasil operasi ke dalam file .txt
+        Scanner input = new Scanner(System.in);
+        System.out.println("Print hasil?\n" +
+                "1. Ya\n" +
+                "2. Tidak");
+        int ops = input.nextInt();
+        if (ops == 1) {
+            System.out.print("Masukkan nama file :\n");
+            String fileName = input.nextLine();
+            IOFile.matriksToFile(matrix, fileName);
         }
     }
 }
