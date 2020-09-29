@@ -1,7 +1,5 @@
 package com.tubes;
 
-import jdk.dynalink.Operation;
-
 import java.util.Scanner;
 import java.util.Vector;
 
@@ -267,6 +265,11 @@ public class SPLSolver {
 
     // SPL Cramer
     static void cramerSPL(Matrix m) {
+        /* I.S. menerima sebuah matriks augmented AB */
+        /* F.S. menampilkan hasil penghitungan SPL menggunakan cramer */
+        /* Proses : membuat matriks temp dengan elemen yang disisipkan matriks B
+                    melakukan penghitungan dan menyimpan dalam matriks hasil */
+        /* Hasil hanya dapat : unik atau tidak dapat ditentukan */
         // KAMUS
         int i;
         int j;
@@ -279,7 +282,7 @@ public class SPLSolver {
         double detA;
 
         // ALGORITMA
-        // matrix augmented menjadi matriks biasa
+        // matrix augmented menjadi matriks biasa; matriks A dan matriks B
         extractAug(m, matriksA, matriksB);
 
         // inisialisasi matriks penyimpan hasil
@@ -290,32 +293,41 @@ public class SPLSolver {
         detA = Determinant.RowReductionDeterminant(matriksA);
         System.out.println(detA);
 
+        // jika determinan matriks A tidak nol, dapat dilanjutkan
         if (detA != 0) {
+            // membuat matriks A dengan sisipan elemen matriks B pada current Column
             for (curCol = 0; curCol < matriksA.getDimension(); curCol++) {
                 for (i = 0; i < matriksA.getDimension(); i++) {
                     for (j = 0; j < matriksA.getDimension(); j++) {
+                        // jika j indeks yang sama dengan current column, temp[j] di isi elemen matriks B
                         if (j == curCol) {
                             temp.setElmt(i, j, matriksB.getElmt(i, 0));
-                        } else {
+                        } else { // jika tidak, temp[j] diisi elemen matriks A
                             temp.setElmt(i, j, matriksA.getElmt(i, j));
                         }
                     } 
                 }
+                // menyimpan hasil perhitungan Determinan Ai / Determinan A
                 xi = Determinant.RowReductionDeterminant(temp) / detA;
                 hasilMatriks.setElmt(curCol, 0, xi);
             }
-
+            // menampilkan hasil penghitungan
             for (i = 0; i < hasilMatriks.getNrow(); i++) {
                 System.out.println("x" + (i + 1) + " = " + hasilMatriks.getElmt(i, 0));
             }
-
-        } else {
+        } else { // jika determinan matriks 0, tidak dapat dilakukan penghitungan
             System.out.println("Determinan 0, SPL tidak memiliki solusi unik.");
         }
     }
 
     // SPL Invers Matrix
     static void inversSPL(Matrix m) {
+        /* I.S. menerima matriks augmented AB */
+        /* F.S. menampilkan solusi SPL dengan menggunakan matriks invers */
+        /* Proses : melakukan perkalian matriks balikan A dengan matriks B.
+                    Jika matriks A tidak memiliki balikan (determinan = 0),
+                    tidak dapat ditentukan hasilnya */
+        /* Hasil hanya dapat : unik atau tidak dapat ditentukan  */
         // KAMUS
         int i;
         int j;

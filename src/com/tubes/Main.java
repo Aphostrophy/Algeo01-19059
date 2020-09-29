@@ -22,11 +22,14 @@ public class Main {
 
             switch (opt){
                 case 1:
+                    // inisiasi
                     System.out.println("Sistem persamaan linear");
-                    System.out.println("1. Manual Input\n" +
-                            "2. Upload file");
                     Matrix matrixSPL = new Matrix();
                     SPLSolver SPL = new SPLSolver();
+
+                    // jenis input
+                    System.out.println("1. Manual Input\n" +
+                            "2. Upload file");
                     int ops = input.nextInt();
                     if(ops==1) {
                         System.out.print("Baris: ");
@@ -67,8 +70,11 @@ public class Main {
                     break;
 
                 case 2:
+                    // inisiasi
                     System.out.println("Determinan");
                     SquareMatrix matrix = new SquareMatrix();
+
+                    // jenis input
                     System.out.println("1. Manual Input\n" +
                             "2. Upload file");
                     ops = input.nextInt();
@@ -93,8 +99,11 @@ public class Main {
                     break;
 
                 case 3:
+                    // inisiasi
                     System.out.println("Matriks Balikan");
                     SquareMatrix matrixInverse = new SquareMatrix();
+
+                    // jenis input
                     System.out.println("1. Manual Input\n" +
                             "2. Upload file");
                     ops = input.nextInt();
@@ -120,6 +129,8 @@ public class Main {
 
                 case 4:
                     System.out.println("Interpolasi polinom");
+
+                    // jenis input
                     System.out.println("1. Manual Input\n" +
                             "2. Upload file");
                     ops = input.nextInt();
@@ -147,18 +158,58 @@ public class Main {
                         SPLSolver solver = new SPLSolver();
                         solver.gaussDriverInterpolation(matrixInterpolateOut);
                     }
-
                     break;
 
                 case 5:
+                    // inisiasi
                     System.out.println("Regresi Linear Berganda");
-                    Scanner q = new Scanner(System.in);
+                    Matrix tabel = new Matrix();
+                    Matrix dataMatrix = new Matrix();
                     Regresi regresi = new Regresi();
-                    System.out.print("Jumlah variabel penentu: ");
-                    int var = q.nextInt();
-                    System.out.print("Jumlah sampel data: ");
-                    int data = q.nextInt();
-                    regresi.driverManual(var, data);
+                    int var = 0;
+                    int nData = 0;
+
+                    // jenis input
+                    System.out.println("1. Manual Input\n" +
+                            "2. Upload file");
+                    ops = input.nextInt();
+                    if (ops == 1) {
+                        Scanner q = new Scanner(System.in);
+                        System.out.print("Jumlah variabel penentu: ");
+                        var = q.nextInt();
+                        System.out.print("Jumlah sampel data: ");
+                        nData = q.nextInt();
+
+                        tabel.makeMatrix(nData, var + 1);
+                        dataMatrix.makeMatrix(var + 1, var + 2);
+
+                        Operations.fillMatrix(tabel);
+                        Operations.printMatrix(tabel);
+
+                    } else if (ops == 2) {
+                        Matrix temp = new Matrix();
+
+                        // membaca matriks dari file
+                        System.out.print("Masukkan nama file :\n");
+                        Scanner inputFileName = new Scanner(System.in);
+                        String namaFile = inputFileName.nextLine();
+                        IOFile.fileToMatriks(temp, namaFile);
+
+                        // inisiasi penyimpan
+                        nData = temp.getNrow();
+                        var = temp.getNcol() - 1; // kolom y bukan banyaknya variabel
+                        tabel.makeMatrix(nData, var + 1);
+                        dataMatrix.makeMatrix(var + 1, var + 2);
+
+                        // copy matriks temp ke tabel
+                        Operations.copyMatrix(temp, tabel);
+                        Operations.printMatrix(tabel);
+                    }
+                    regresi.driverManual(tabel, dataMatrix, var, nData);
+
+                    Operations.printMatrix(dataMatrix);
+                    SPLSolver solver = new SPLSolver();
+                    solver.gaussDriverRegression(dataMatrix, var);
                     break;
 
                 case 6:

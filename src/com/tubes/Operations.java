@@ -163,4 +163,27 @@ public class Operations {
         return Math.round(value * scale)/scale;
     }
 
+    static void  copyMatrix(Matrix matrixIn, Matrix matrixOut) {
+        for (int i = 0; i < matrixIn.getNrow(); i++) {
+            for (int j = 0; j < matrixIn.getNcol(); j++) {
+                matrixOut.setElmt(i, j, matrixIn.getElmt(i, j));
+            }
+        }
+    }
+
+    static void  copyMatrix(SquareMatrix matrixIn, SquareMatrix matrixOut) {
+        for (int i = 0; i < matrixIn.getDimension(); i++) {
+            for (int j = 0; j < matrixIn.getDimension(); j++) {
+                matrixOut.setElmt(i, j, matrixIn.getElmt(i, j));
+            }
+        }
+    }
+
+    static void  copyMatrix(SquareMatrix matrixIn, Matrix matrixOut) {
+        for (int i = 0; i < matrixIn.getDimension(); i++) {
+            for (int j = 0; j < matrixIn.getDimension(); j++) {
+                matrixOut.setElmt(i, j, matrixIn.getElmt(i, j));
+            }
+        }
+    }
 }
