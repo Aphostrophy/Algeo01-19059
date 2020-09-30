@@ -148,6 +148,7 @@ public class Main {
 
                 case 4:
                     System.out.println("Interpolasi polinom");
+                    hasilMat = new Matrix();
 
                     // jenis input
                     ops = OpsiInput();
@@ -156,7 +157,9 @@ public class Main {
                         Scanner p = new Scanner(System.in);
                         int n = p.nextInt();
                         Interpolasi interpolasi = new Interpolasi();
-                        interpolasi.driverManual(n);
+                        interpolasi.driverManual(n, hasilMat);
+                        OpsiPrintHasil(hasilMat);
+
                     } else if (ops == 2) {
                         // input nama file
                         System.out.print("Masukkan nama file :\n");
@@ -173,7 +176,8 @@ public class Main {
 
                         // penghitungan
                         SPLSolver solver = new SPLSolver();
-                        solver.gaussDriverInterpolation(matrixInterpolateOut);
+                        solver.gaussDriverInterpolation(matrixInterpolateOut, hasilMat);
+                        OpsiPrintHasil(hasilMat);
                     }
                     break;
 

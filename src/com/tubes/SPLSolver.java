@@ -28,7 +28,7 @@ public class SPLSolver {
         }
     }
 
-    public void gaussDriverInterpolation(Matrix matrix){
+    public void gaussDriverInterpolation(Matrix matrix, Matrix mOut){
         Matrix M;
         Scanner scanner = new Scanner(System.in);
         M = gauss(matrix);
@@ -70,6 +70,10 @@ public class SPLSolver {
                     y += solutions.get(i)*Math.pow(x, solutions.size()-1-i);
                 }
             }
+            mOut.makeMatrix(1, 2);
+            mOut.setElmt(0, 0, x);
+            mOut.setElmt(0, 1, y);
+
             System.out.println("P2(" + x + ") = " + y);
             System.out.println();
         } else{
