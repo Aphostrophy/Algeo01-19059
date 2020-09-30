@@ -360,6 +360,7 @@ public class SPLSolver {
         int k;
         double hasil;
         SquareMatrix matriksA = new SquareMatrix();
+        SquareMatrix temp = new SquareMatrix();
         Matrix matriksB = new Matrix();
         Matrix mInversed = new Matrix();
 
@@ -372,13 +373,16 @@ public class SPLSolver {
         // Mengambil matriks SPL dari matriks augmented
         extractAug(m, matriksA, matriksB);
 
-        if(Determinant.CofactorExpansionDeterminant(matriksA) == 0) {
+        temp.makeMatrix(matriksA.getDimension());
+        Operations.copyMatrix(matriksA, temp);
+
+        if(Determinant.CofactorExpansionDeterminant(temp) == 0) {
             System.out.println("Determinan matriks 0. SPL tidak memiliki solusi unik.");
             return;
         }
 
         // invers matriks
-        Inverse.AdjointInverse(matriksA, mInversed);
+        Inverse.RowOperationInverse(matriksA, mInversed);
         
         // inisialisasi matriks penyimpan hasil
         mOut.makeMatrix(mInversed.getNrow(), 1);
