@@ -99,13 +99,7 @@ public class Operations {
         }
         return temp;
     }
-
-    static Matrix cofactor(Matrix matrix,int row,int column){
-        Matrix malesmikir = new Matrix();
-        return malesmikir;
-    }
-
-
+    
     static Matrix transpose(Matrix matrix) {
         Matrix temp = new Matrix();
         temp.makeMatrix(matrix.getNcol(), matrix.getNrow());
