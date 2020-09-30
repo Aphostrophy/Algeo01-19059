@@ -82,7 +82,7 @@ public class SPLSolver {
         }
     }
 
-    public void gaussDriverRegression(Matrix matrix, int n){
+    public void gaussDriverRegression(Matrix matrix, int n, Matrix mOut){
         double[] x = new double[n];
         double y = 0;
         Matrix M;
@@ -109,9 +109,12 @@ public class SPLSolver {
                 }
             }
             System.out.println(equation);
+
+            mOut.makeMatrix(1, n+1);
             for(int i = 0; i < n; i++) {
                 System.out.print("Input x" + (i+1) + ": ");
                 x[i] = scanner.nextDouble();
+                mOut.setElmt(0, i, x[i]);
             }
             for(int i=solutions.size()-1;i>-1;i--){
                 int var = 0;
@@ -131,6 +134,8 @@ public class SPLSolver {
                 }
             }
             System.out.println(y);
+            mOut.setElmt(0, mOut.getNcol() - 1, y);
+
             System.out.println();
         } else{
             System.out.println("Many solutions, regression cannot be determined");

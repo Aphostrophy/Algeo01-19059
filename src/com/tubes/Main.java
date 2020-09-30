@@ -186,6 +186,7 @@ public class Main {
                     System.out.println("Regresi Linear Berganda");
                     Matrix tabel = new Matrix();
                     Matrix dataMatrix = new Matrix();
+                    hasilMat = new Matrix();
                     Regresi regresi = new Regresi();
                     int var = 0;
                     int nData = 0;
@@ -229,7 +230,9 @@ public class Main {
                     System.out.println("Matriks dari persamaan yang terbentuk : ");
                     Operations.printMatrix(dataMatrix);
                     SPLSolver solver = new SPLSolver();
-                    solver.gaussDriverRegression(dataMatrix, var);
+                    solver.gaussDriverRegression(dataMatrix, var, hasilMat);
+
+                    OpsiPrintHasil(hasilMat);
                     break;
 
                 case 6:
