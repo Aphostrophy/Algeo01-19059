@@ -225,7 +225,7 @@ public class Main {
                         Operations.copyMatrix(temp, tabel);
                         Operations.printMatrix(tabel);
                     }
-                    regresi.driverManual(tabel, dataMatrix, var, nData);
+                    regresi.generateMatrixEquation(tabel, dataMatrix, var, nData);
 
                     System.out.println("Matriks dari persamaan yang terbentuk : ");
                     Operations.printMatrix(dataMatrix);

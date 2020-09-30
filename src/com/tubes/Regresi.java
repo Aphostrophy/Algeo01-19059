@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Regresi {
 
-    public void driverManual(Matrix tabel, Matrix dataMatrix, int var, int nData) {
+    public void generateMatrixEquation(Matrix tabel, Matrix dataMatrix, int var, int nData) {
         // Mengisi baris pertama dataMatrix
         dataMatrix.setElmt(0, 0, nData);
         int colDat = 0;
