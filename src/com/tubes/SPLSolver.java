@@ -6,6 +6,7 @@ import java.util.Vector;
 public class SPLSolver {
 
     public void gaussDriver(Matrix matrix){
+//        mOut.makeMatrix(matrix.getNrow(), 1);
         Matrix M;
         Operations.printMatrix(matrix);
         M = gauss(matrix);
@@ -17,11 +18,13 @@ public class SPLSolver {
         } else if(mark==1){
             System.out.println("Solutions can be determined");
             singleSolution(matrix);
+//            Operations.copyMatrix(matrix, mOut);
             System.out.println();
         } else{
             System.out.println("Many solutions");
             Operations.printMatrix(matrix);
             translator(matrix);
+//            Operations.copyMatrix(matrix, mOut);
         }
     }
 
@@ -296,7 +299,7 @@ public class SPLSolver {
 
         // operasi SPL Cramer
         temp.makeMatrix(m.getNrow());
-        detA = Determinant.RowReductionDeterminant(matriksA);
+        detA = Determinant.CofactorExpansionDeterminant(matriksA);
         System.out.println(detA);
 
         // jika determinan matriks A tidak nol, dapat dilanjutkan
@@ -314,7 +317,7 @@ public class SPLSolver {
                     } 
                 }
                 // menyimpan hasil perhitungan Determinan Ai / Determinan A
-                xi = Determinant.RowReductionDeterminant(temp) / detA;
+                xi = Determinant.CofactorExpansionDeterminant(temp) / detA;
                 mOut.setElmt(curCol, 0, xi);
             }
             // menampilkan hasil penghitungan
@@ -327,7 +330,7 @@ public class SPLSolver {
     }
 
     // SPL Invers Matrix
-    static void inversSPL(Matrix m) {
+    static void inversSPL(Matrix m, Matrix mOut) {
         /* I.S. menerima matriks augmented AB */
         /* F.S. menampilkan solusi SPL dengan menggunakan matriks invers */
         /* Proses : melakukan perkalian matriks balikan A dengan matriks B.
@@ -336,35 +339,32 @@ public class SPLSolver {
         /* Hasil hanya dapat : unik atau tidak dapat ditentukan  */
         // KAMUS
         int i;
-        int j;
         int k;
         double hasil;
         SquareMatrix matriksA = new SquareMatrix();
         Matrix matriksB = new Matrix();
-        Matrix hasilMatriks = new Matrix();
+        Matrix mInversed = new Matrix();
 
         // ALGORITMA
         // Mengambil matriks SPL dari matriks augmented
         extractAug(m, matriksA, matriksB);
 
         // invers matriks
-        Inverse.RowOperationInverse(matriksA);
+        Inverse.AdjointInverse(matriksA, mInversed);
         
         // inisialisasi matriks penyimpan hasil
-        hasilMatriks.makeMatrix(matriksA.getDimension(), 1);
+        mOut.makeMatrix(mInversed.getNrow(), 1);
 
-        for (i = 0; i < matriksA.getDimension(); i++) {
-            for (j = 0; j < matriksA.getDimension(); j++) {
-                hasil = 0;
-                for (k = 0; k < matriksA.getDimension(); k++) {
-                    hasil += matriksA.getElmt(i, k) * matriksB.getElmt(k, 0);
-                }
-                hasilMatriks.setElmt(i, 0, hasil);
+        for (i = 0; i < mInversed.getNrow(); i++) {
+            hasil = 0;
+            for (k = 0; k < mInversed.getNcol(); k++) {
+                hasil += mInversed.getElmt(i, k) * matriksB.getElmt(k, 0);
             }
+            mOut.setElmt(i, 0, hasil);
         }
         
-        for (i = 0; i < hasilMatriks.getNrow(); i++) {
-            System.out.println("x" + (i + 1) + " = " + hasilMatriks.getElmt(i, 0));
+        for (i = 0; i < mOut.getNrow(); i++) {
+            System.out.println("x" + (i + 1) + " = " + mOut.getElmt(i, 0));
         }
     }
 
@@ -537,6 +537,8 @@ public class SPLSolver {
         int[] countVarBrs = new int[matrix.getNrow()]; // Array untuk menampung jumlah variabel yg terdefinisi tiap barisnya setelah OBE
         char[] definedVar = new char[matrix.getNcol()-1]; // Array untuk menyimpan apakah setiap variabel terdefinisi setelaj OBE
         boolean solvable = false; // Variabel yang menyatakan SPL solvable atau tidak
+
+//        mOut.makeMatrix(matrix.getNrow(), 1);
 
         // Inisialisasi array countVarBrs
         for(int i = 0; i < matrix.getNrow(); i++) {

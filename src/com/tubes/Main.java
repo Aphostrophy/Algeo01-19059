@@ -54,13 +54,15 @@ public class Main {
                     int op = input.nextInt();
                     if(op==1) {
                         System.out.println("Metode Eliminasi Gauss");
+                        // Output file belum terimplementasi
                         SPL.gaussDriver(matrixSPL);
                     } else if(op==2) {
                         System.out.println("Metode eliminasi Gauss-Jordan");
+                        // Output file belum terimplementasi
                         SPLSolver.gaussJordanSolver(matrixSPL);
                     } else if(op==3) {
                         System.out.println("Metode matriks balikan");
-                        SPLSolver.inversSPL(matrixSPL);
+                        SPLSolver.inversSPL(matrixSPL, hasilMat);
                     } else if(op==4) {
                         System.out.println("Kaidah crammer");
                         SPLSolver.cramerSPL(matrixSPL, hasilMat);
@@ -124,11 +126,24 @@ public class Main {
                         IOFile.fileToMatriks(matrixInverse, namaFile);
                     }
 
+                    // hasil matriks untuk diprint
+                    hasilMat = new Matrix();
+
                     Operations.printMatrix(matrixInverse);
-                    System.out.println("Invers Matriks: ");
-                    Inverse.AdjointInverse(matrixInverse);
-                    System.out.println("Invers Matriks: ");
-                    Inverse.RowOperationInverse(matrixInverse);
+
+                    System.out.println("Pilih metode :\n" +
+                            "1. Invers Adjoin\n" +
+                            "2. Operasi baris elementer");
+                    opt = input.nextInt();
+                    if (opt == 1) {
+                        System.out.println("Invers Matriks: ");
+                        Inverse.AdjointInverse(matrixInverse, hasilMat);
+                    } else if (opt == 2) {
+                        System.out.println("Invers Matriks: ");
+                        Inverse.RowOperationInverse(matrixInverse, hasilMat);
+                    }
+
+                    OpsiPrintHasil(hasilMat);
                     break;
 
                 case 4:
