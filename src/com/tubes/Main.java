@@ -55,7 +55,6 @@ public class Main {
                     int op = input.nextInt();
                     if(op==1) {
                         System.out.println("Metode Eliminasi Gauss");
-                        // Output file belum terimplementasi
                         char[] simpanPara = new char[0];
                         SPL.gaussDriver(matrixSPL, hasilMat, simpanPara);
                     } else if(op==2) {
