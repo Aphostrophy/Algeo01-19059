@@ -46,6 +46,7 @@ public class Main {
                     }
                     Operations.printMatrix(matrixSPL);
 
+                    Matrix hasilMat = new Matrix();
                     System.out.println("1. Metode Eliminasi Gauss\n" +
                             "2. Metode eliminasi Gauss-Jordan\n" +
                             "3. Metode matriks balikan\n" +
@@ -53,19 +54,22 @@ public class Main {
                     int op = input.nextInt();
                     if(op==1) {
                         System.out.println("Metode Eliminasi Gauss");
+                        // Output file belum terimplementasi
                         SPL.gaussDriver(matrixSPL);
                     } else if(op==2) {
                         System.out.println("Metode eliminasi Gauss-Jordan");
+                        // Output file belum terimplementasi
                         SPLSolver.gaussJordanSolver(matrixSPL);
                     } else if(op==3) {
                         System.out.println("Metode matriks balikan");
-                        SPLSolver.inversSPL(matrixSPL);
+                        SPLSolver.inversSPL(matrixSPL, hasilMat);
                     } else if(op==4) {
                         System.out.println("Kaidah crammer");
-                        SPLSolver.cramerSPL(matrixSPL);
+                        SPLSolver.cramerSPL(matrixSPL, hasilMat);
                     } else{
                         System.out.println("Input salah");
                     }
+                    OpsiPrintHasil(hasilMat);
                     break;
 
                 case 2:
@@ -93,6 +97,13 @@ public class Main {
                     System.out.println("The determinant value is " + det);
                     det = Determinant.CofactorExpansionDeterminant(matrix);
                     System.out.println("The determinant value is " + det);
+
+                    // hasil matriks untuk diprint
+                    hasilMat = new Matrix();
+                    hasilMat.makeMatrix(1, 1);
+
+                    hasilMat.setElmt(0, 0, det);
+                    OpsiPrintHasil(hasilMat);
                     break;
 
                 case 3:
@@ -115,15 +126,29 @@ public class Main {
                         IOFile.fileToMatriks(matrixInverse, namaFile);
                     }
 
+                    // hasil matriks untuk diprint
+                    hasilMat = new Matrix();
+
                     Operations.printMatrix(matrixInverse);
-                    System.out.println("Invers Matriks: ");
-                    Inverse.AdjointInverse(matrixInverse);
-                    System.out.println("Invers Matriks: ");
-                    Inverse.RowOperationInverse(matrixInverse);
+
+                    System.out.println("Pilih metode :\n" +
+                            "1. Invers Adjoin\n" +
+                            "2. Operasi baris elementer");
+                    opt = input.nextInt();
+                    if (opt == 1) {
+                        System.out.println("Invers Matriks: ");
+                        Inverse.AdjointInverse(matrixInverse, hasilMat);
+                    } else if (opt == 2) {
+                        System.out.println("Invers Matriks: ");
+                        Inverse.RowOperationInverse(matrixInverse, hasilMat);
+                    }
+
+                    OpsiPrintHasil(hasilMat);
                     break;
 
                 case 4:
                     System.out.println("Interpolasi polinom");
+                    hasilMat = new Matrix();
 
                     // jenis input
                     ops = OpsiInput();
@@ -132,7 +157,9 @@ public class Main {
                         Scanner p = new Scanner(System.in);
                         int n = p.nextInt();
                         Interpolasi interpolasi = new Interpolasi();
-                        interpolasi.driverManual(n);
+                        interpolasi.driverManual(n, hasilMat);
+                        OpsiPrintHasil(hasilMat);
+
                     } else if (ops == 2) {
                         // input nama file
                         System.out.print("Masukkan nama file :\n");
@@ -149,7 +176,8 @@ public class Main {
 
                         // penghitungan
                         SPLSolver solver = new SPLSolver();
-                        solver.gaussDriverInterpolation(matrixInterpolateOut);
+                        solver.gaussDriverInterpolation(matrixInterpolateOut, hasilMat);
+                        OpsiPrintHasil(hasilMat);
                     }
                     break;
 
@@ -158,6 +186,7 @@ public class Main {
                     System.out.println("Regresi Linear Berganda");
                     Matrix tabel = new Matrix();
                     Matrix dataMatrix = new Matrix();
+                    hasilMat = new Matrix();
                     Regresi regresi = new Regresi();
                     int var = 0;
                     int nData = 0;
@@ -201,7 +230,9 @@ public class Main {
                     System.out.println("Matriks dari persamaan yang terbentuk : ");
                     Operations.printMatrix(dataMatrix);
                     SPLSolver solver = new SPLSolver();
-                    solver.gaussDriverRegression(dataMatrix, var);
+                    solver.gaussDriverRegression(dataMatrix, var, hasilMat);
+
+                    OpsiPrintHasil(hasilMat);
                     break;
 
                 case 6:
@@ -232,7 +263,8 @@ public class Main {
         int ops = input.nextInt();
         if (ops == 1) {
             System.out.print("Masukkan nama file :\n");
-            String fileName = input.nextLine();
+            Scanner inputFileName = new Scanner(System.in);
+            String fileName = inputFileName.nextLine();
             IOFile.matriksToFile(matrix, fileName);
         }
     }

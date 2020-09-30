@@ -6,6 +6,7 @@ import java.util.Vector;
 public class SPLSolver {
 
     public void gaussDriver(Matrix matrix){
+//        mOut.makeMatrix(matrix.getNrow(), 1);
         Matrix M;
         Operations.printMatrix(matrix);
         M = gauss(matrix);
@@ -17,15 +18,17 @@ public class SPLSolver {
         } else if(mark==1){
             System.out.println("Solutions can be determined");
             singleSolution(matrix);
+//            Operations.copyMatrix(matrix, mOut);
             System.out.println();
         } else{
             System.out.println("Many solutions");
             Operations.printMatrix(matrix);
             translator(matrix);
+//            Operations.copyMatrix(matrix, mOut);
         }
     }
 
-    public void gaussDriverInterpolation(Matrix matrix){
+    public void gaussDriverInterpolation(Matrix matrix, Matrix mOut){
         Matrix M;
         Scanner scanner = new Scanner(System.in);
         M = gauss(matrix);
@@ -68,6 +71,11 @@ public class SPLSolver {
                 }
             }
             System.out.println("P" + (matrix.getNrow()-1)+ "(" + x + ") = " + y);
+            mOut.makeMatrix(1, 2);
+            mOut.setElmt(0, 0, x);
+            mOut.setElmt(0, 1, y);
+
+            System.out.println("P2(" + x + ") = " + y);
             System.out.println();
         } else{
             System.out.println("Many solutions, interpolation cannot be determined");
@@ -75,7 +83,7 @@ public class SPLSolver {
         }
     }
 
-    public void gaussDriverRegression(Matrix matrix, int n){
+    public void gaussDriverRegression(Matrix matrix, int n, Matrix mOut){
         double[] x = new double[n];
         double y = 0;
         Matrix M;
@@ -102,9 +110,12 @@ public class SPLSolver {
                 }
             }
             System.out.println(equation);
+
+            mOut.makeMatrix(1, n+1);
             for(int i = 0; i < n; i++) {
                 System.out.print("Input x" + (i+1) + ": ");
                 x[i] = scanner.nextDouble();
+                mOut.setElmt(0, i, x[i]);
             }
             for(int i=solutions.size()-1;i>-1;i--){
                 int var = 0;
@@ -124,6 +135,8 @@ public class SPLSolver {
                 }
             }
             System.out.println(y);
+            mOut.setElmt(0, mOut.getNcol() - 1, y);
+
             System.out.println();
         } else{
             System.out.println("Many solutions, regression cannot be determined");
@@ -271,7 +284,7 @@ public class SPLSolver {
     }
 
     // SPL Cramer
-    static void cramerSPL(Matrix m) {
+    static void cramerSPL(Matrix m, Matrix mOut) {
         /* I.S. menerima sebuah matriks augmented AB */
         /* F.S. menampilkan hasil penghitungan SPL menggunakan cramer */
         /* Proses : membuat matriks temp dengan elemen yang disisipkan matriks B
@@ -284,7 +297,6 @@ public class SPLSolver {
         SquareMatrix temp = new SquareMatrix();
         SquareMatrix matriksA = new SquareMatrix();
         Matrix matriksB = new Matrix();
-        Matrix hasilMatriks = new Matrix();
         double xi;
         double detA;
 
@@ -293,11 +305,11 @@ public class SPLSolver {
         extractAug(m, matriksA, matriksB);
 
         // inisialisasi matriks penyimpan hasil
-        hasilMatriks.makeMatrix(matriksA.getDimension(), 1);
+        mOut.makeMatrix(matriksA.getDimension(), 1);
 
         // operasi SPL Cramer
         temp.makeMatrix(m.getNrow());
-        detA = Determinant.RowReductionDeterminant(matriksA);
+        detA = Determinant.CofactorExpansionDeterminant(matriksA);
         System.out.println(detA);
 
         // jika determinan matriks A tidak nol, dapat dilanjutkan
@@ -315,12 +327,12 @@ public class SPLSolver {
                     } 
                 }
                 // menyimpan hasil perhitungan Determinan Ai / Determinan A
-                xi = Determinant.RowReductionDeterminant(temp) / detA;
-                hasilMatriks.setElmt(curCol, 0, xi);
+                xi = Determinant.CofactorExpansionDeterminant(temp) / detA;
+                mOut.setElmt(curCol, 0, xi);
             }
             // menampilkan hasil penghitungan
-            for (i = 0; i < hasilMatriks.getNrow(); i++) {
-                System.out.println("x" + (i + 1) + " = " + hasilMatriks.getElmt(i, 0));
+            for (i = 0; i < mOut.getNrow(); i++) {
+                System.out.println("x" + (i + 1) + " = " + mOut.getElmt(i, 0));
             }
         } else { // jika determinan matriks 0, tidak dapat dilakukan penghitungan
             System.out.println("Determinan 0, SPL tidak memiliki solusi unik.");
@@ -328,7 +340,7 @@ public class SPLSolver {
     }
 
     // SPL Invers Matrix
-    static void inversSPL(Matrix m) {
+    static void inversSPL(Matrix m, Matrix mOut) {
         /* I.S. menerima matriks augmented AB */
         /* F.S. menampilkan solusi SPL dengan menggunakan matriks invers */
         /* Proses : melakukan perkalian matriks balikan A dengan matriks B.
@@ -337,35 +349,32 @@ public class SPLSolver {
         /* Hasil hanya dapat : unik atau tidak dapat ditentukan  */
         // KAMUS
         int i;
-        int j;
         int k;
         double hasil;
         SquareMatrix matriksA = new SquareMatrix();
         Matrix matriksB = new Matrix();
-        Matrix hasilMatriks = new Matrix();
+        Matrix mInversed = new Matrix();
 
         // ALGORITMA
         // Mengambil matriks SPL dari matriks augmented
         extractAug(m, matriksA, matriksB);
 
         // invers matriks
-        Inverse.RowOperationInverse(matriksA);
+        Inverse.AdjointInverse(matriksA, mInversed);
         
         // inisialisasi matriks penyimpan hasil
-        hasilMatriks.makeMatrix(matriksA.getDimension(), 1);
+        mOut.makeMatrix(mInversed.getNrow(), 1);
 
-        for (i = 0; i < matriksA.getDimension(); i++) {
-            for (j = 0; j < matriksA.getDimension(); j++) {
-                hasil = 0;
-                for (k = 0; k < matriksA.getDimension(); k++) {
-                    hasil += matriksA.getElmt(i, k) * matriksB.getElmt(k, 0);
-                }
-                hasilMatriks.setElmt(i, 0, hasil);
+        for (i = 0; i < mInversed.getNrow(); i++) {
+            hasil = 0;
+            for (k = 0; k < mInversed.getNcol(); k++) {
+                hasil += mInversed.getElmt(i, k) * matriksB.getElmt(k, 0);
             }
+            mOut.setElmt(i, 0, hasil);
         }
         
-        for (i = 0; i < hasilMatriks.getNrow(); i++) {
-            System.out.println("x" + (i + 1) + " = " + hasilMatriks.getElmt(i, 0));
+        for (i = 0; i < mOut.getNrow(); i++) {
+            System.out.println("x" + (i + 1) + " = " + mOut.getElmt(i, 0));
         }
     }
 
@@ -536,15 +545,17 @@ public class SPLSolver {
 
     static void gaussJordanSolver (Matrix matrix) {
         int[] countVarBrs = new int[matrix.getNrow()]; // Array untuk menampung jumlah variabel yg terdefinisi tiap barisnya setelah OBE
-        boolean[] definedVar = new boolean[matrix.getNcol()-1]; // Array untuk menyimpan apakah setiap variabel terdefinisi setelaj OBE
+        char[] definedVar = new char[matrix.getNcol()-1]; // Array untuk menyimpan apakah setiap variabel terdefinisi setelaj OBE
         boolean solvable = false; // Variabel yang menyatakan SPL solvable atau tidak
+
+//        mOut.makeMatrix(matrix.getNrow(), 1);
 
         // Inisialisasi array countVarBrs
         for(int i = 0; i < matrix.getNrow(); i++) {
             countVarBrs[i] = 0;
         }
         for(int i = 0; i < matrix.getNcol()-1; i++) {
-            definedVar[i] = false;
+            definedVar[i] = ' ';
         }
 
         // Awal operasi OBE
@@ -589,6 +600,7 @@ public class SPLSolver {
                     }
                 }
             }
+            Operations.printMatrix(matrix);
 
             // Melanjutkan ke baris berikutnya
             idxRow++;
@@ -620,16 +632,16 @@ public class SPLSolver {
             System.out.println("SPL tidak memiliki solusi");
         } else {
             // Mengganti variabel dependen dengan variabel lain jika SPL memilki banyak solusi
+            int abjad = 0;
             for(int i = 0; i < matrix.getNrow(); i++) {
-                int abjad = 0;
                 int j = 0;
                 while (j < matrix.getNcol()-1) {
                     if(matrix.getElmt(i, j) != 0) {
                         for(int k = j+1; k < matrix.getNcol()-1; k++) {
-                            if(matrix.getElmt(i, k) != 0 && !definedVar[k]) {
+                            if(matrix.getElmt(i, k) != 0 && definedVar[k] == ' ') {
                                 System.out.println("x" + (k+1) + " = " + (char)(119-abjad));
+                                definedVar[k] = (char)(119-abjad);
                                 abjad++;
-                                definedVar[k] = true;
                             }
                         }
                     }
@@ -640,49 +652,48 @@ public class SPLSolver {
             // Mencetak solusi independen
             for(int i = 0; i < matrix.getNrow(); i++) {
                 int j = 0;
-                int abjad = 0;
                 int temp = countVarBrs[i];
                 boolean allZero = true; // Variabel yang menyatakan apakah suatu baris setelah OBE bernilai 0 semua atau tidak
 
-                while (j < matrix.getNcol()-1) {
-                    // Jika b[j] != 0
-                    if(matrix.getElmt(i, matrix.getNcol()-1) != 0) {
-                        allZero = false;
+                // Jika b[j] != 0
+                if(matrix.getElmt(i, matrix.getNcol()-1) != 0) {
+                    allZero = false;
+                    while(j < matrix.getNcol()-1) {
 
                         // Mencetak variabel pertama yg terdefinsi dalam baris besert b[j]
-                        if(matrix.getElmt(i, j) != 0 && temp == countVarBrs[i]) {
-                            System.out.print("x" + (j+1) + " = " + matrix.getElmt(i, matrix.getNcol()-1));
-                            definedVar[j] = true;
+                        if (matrix.getElmt(i, j) != 0 && temp == countVarBrs[i]) {
+                            System.out.print("x" + (j + 1) + " = " + matrix.getElmt(i, matrix.getNcol() - 1));
                             temp--;
                         }
 
                         // Mencetak sisa variabel yang dipindahruaskan
-                        else if(matrix.getElmt(i, j) != 0) {
-                            if(matrix.getElmt(i, j) >= 0) {
-                                System.out.print(" - " + matrix.getElmt(i, j) + (char)(119-abjad));
+                        else if (matrix.getElmt(i, j) != 0) {
+                            if (matrix.getElmt(i, j) >= 0) {
+                                System.out.print(" - " + matrix.getElmt(i, j) + definedVar[j]);
                                 abjad++;
                             } else {
-                                System.out.print(" + " + (-1*matrix.getElmt(i, j)) + (char)(119-abjad));
+                                System.out.print(" + " + (-1 * matrix.getElmt(i, j)) + definedVar[j]);
                                 abjad++;
                             }
                             temp--;
                         }
                         j++;
-                    } else { // b[j] == 0
+                    }
+                } else { // b[j] == 0
+                    while(j < matrix.getNcol()-1 && temp >= 0) {
                         // Mencetak variabel pertama yang terdefinisi, b[j], dan sisa variabel terdefinsi dalam baris yang sudah dipindahruaskan
                         if(matrix.getElmt(i, j) != 0 && temp == countVarBrs[i]) {
                             allZero = false;
                             System.out.print("x" + (j+1) + " = ");
-                            definedVar[j] = true;
-
+                            j++;
                             // Jika hanya ada 1 variabel terdefinisi dalam baris, cetak 0
                             if(countVarBrs[i] == 1) {
                                 System.out.print(0);
                             } else if(matrix.getElmt(i, j) >= 0) {
-                                System.out.print("-" + matrix.getElmt(i, j) + (char)(119-abjad));
+                                System.out.print("-" + matrix.getElmt(i, j) + definedVar[j]);
                                 abjad++;
                             } else {
-                                System.out.print((-1*matrix.getElmt(i, j)) + (char)(119-abjad));
+                                System.out.print((-1 * matrix.getElmt(i, j)) + "" + definedVar[j]);
                                 abjad++;
                             }
                             temp -= 2;
@@ -690,10 +701,10 @@ public class SPLSolver {
                         } else if(matrix.getElmt(i, j) != 0) {
                             allZero = false;
                             if(matrix.getElmt(i, j) >= 0) {
-                                System.out.print(" - " + matrix.getElmt(i, j) + (char)(119-abjad));
+                                System.out.print(" - " + matrix.getElmt(i, j) + definedVar[j]);
                                 abjad++;
                             } else {
-                                System.out.print(" + " + (-1*matrix.getElmt(i, j)) + (char)(119-abjad));
+                                System.out.print(" + " + (-1*matrix.getElmt(i, j)) + definedVar[j]);
                                 abjad++;
                             }
                             temp--;
