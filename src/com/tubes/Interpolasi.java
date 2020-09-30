@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Interpolasi {
 
-    public void driverManual(int n, Matrix mOut){
+    public void driverManual(int n, Matrix mOut, StringBuilder kalimat){
         Matrix matrix = new Matrix();
         matrix.makeMatrix(n,n+1);
         Scanner scanner = new Scanner(System.in);
@@ -23,7 +23,7 @@ public class Interpolasi {
 
         Operations.printMatrix(matrix);
         SPLSolver solver = new SPLSolver();
-        solver.gaussDriverInterpolation(matrix, mOut);
+        solver.gaussDriverInterpolation(matrix, mOut, kalimat);
     }
 
     static void createPowMatrix(Matrix matrixIn, Matrix matrixOut) {

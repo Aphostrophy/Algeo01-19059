@@ -103,8 +103,6 @@ public class IOFile {
         int i;
         int j;
         String line;
-        System.out.println(kalimat);
-        System.out.println("Kalimat should be printed above");
 
         // ALGORITMA
         try {

@@ -158,7 +158,7 @@ public class Main {
                         Scanner p = new Scanner(System.in);
                         int n = p.nextInt();
                         Interpolasi interpolasi = new Interpolasi();
-                        interpolasi.driverManual(n, hasilMat);
+                        interpolasi.driverManual(n, hasilMat, kalimat);
                         OpsiPrintHasil(hasilMat, kalimat);
 
                     } else if (ops == 2) {
@@ -177,7 +177,7 @@ public class Main {
 
                         // penghitungan
                         SPLSolver solver = new SPLSolver();
-                        solver.gaussDriverInterpolation(matrixInterpolateOut, hasilMat);
+                        solver.gaussDriverInterpolation(matrixInterpolateOut, hasilMat, kalimat);
                         OpsiPrintHasil(hasilMat, kalimat);
                     }
                     break;

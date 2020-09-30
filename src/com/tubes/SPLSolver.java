@@ -28,7 +28,7 @@ public class SPLSolver {
         }
     }
 
-    public void gaussDriverInterpolation(Matrix matrix, Matrix mOut){
+    public void gaussDriverInterpolation(Matrix matrix, Matrix mOut, StringBuilder kalimat){
         Matrix M;
         Scanner scanner = new Scanner(System.in);
         M = gauss(matrix);
@@ -36,7 +36,8 @@ public class SPLSolver {
         y=0;
         int mark = validateGaussMatrix(M);
         if(mark==0){
-            System.out.println("No possible solution");
+            kalimat.append("No possible solution");
+            System.out.println(kalimat);
         } else if(mark==1){
             System.out.println("Solutions can be determined");
             Vector<Double> solutions = new Vector<>();
@@ -60,7 +61,8 @@ public class SPLSolver {
                     }
                 }
             }
-            System.out.println(equation);
+            kalimat.append(equation);
+            System.out.println(kalimat);
             System.out.print("Input x: ");
             x = scanner.nextDouble();
             for(int i=solutions.size()-1;i>-1;i--){
@@ -71,6 +73,7 @@ public class SPLSolver {
                 }
             }
             System.out.println("P" + (matrix.getNrow()-1)+ "(" + x + ") = " + y);
+
             mOut.makeMatrix(1, 2);
             mOut.setElmt(0, 0, x);
             mOut.setElmt(0, 1, y);
@@ -78,7 +81,8 @@ public class SPLSolver {
             System.out.println("P2(" + x + ") = " + y);
             System.out.println();
         } else{
-            System.out.println("Many solutions, interpolation cannot be determined");
+            kalimat.append("Many solutions, interpolation cannot be determined");
+            System.out.println(kalimat);
             translator(matrix);
         }
     }
