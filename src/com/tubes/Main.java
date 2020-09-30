@@ -56,7 +56,8 @@ public class Main {
                     if(op==1) {
                         System.out.println("Metode Eliminasi Gauss");
                         // Output file belum terimplementasi
-                        SPL.gaussDriver(matrixSPL);
+                        char[] simpanPara = new char[0];
+                        SPL.gaussDriver(matrixSPL, hasilMat, simpanPara);
                     } else if(op==2) {
                         System.out.println("Metode eliminasi Gauss-Jordan");
                         // Output file belum terimplementasi

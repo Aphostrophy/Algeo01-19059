@@ -5,7 +5,7 @@ import java.util.Vector;
 
 public class SPLSolver {
 
-    public void gaussDriver(Matrix matrix){
+    public void gaussDriver(Matrix matrix, Matrix mOut, char[] simpanPara){
 //        mOut.makeMatrix(matrix.getNrow(), 1);
         Matrix M;
         Operations.printMatrix(matrix);
@@ -17,15 +17,38 @@ public class SPLSolver {
             System.out.println("No possible solution");
         } else if(mark==1){
             System.out.println("Solutions can be determined");
-            singleSolution(matrix);
+            singleSolution(matrix, mOut);
 //            Operations.copyMatrix(matrix, mOut);
             System.out.println();
         } else{
             System.out.println("Many solutions");
             Operations.printMatrix(matrix);
-            translator(matrix);
+            translatorBuatIOFile(matrix, simpanPara);
 //            Operations.copyMatrix(matrix, mOut);
         }
+    }
+
+    public Vector<Double> gaussDriverReturn(Matrix matrix){
+//        mOut.makeMatrix(matrix.getNrow(), 1);
+        Matrix M;
+        Vector<Double> solutions = new Vector<>();
+        Operations.printMatrix(matrix);
+        M = gauss(matrix);
+        System.out.println("tes");
+        int mark = validateGaussMatrix(M);
+        Operations.printMatrix(M);
+        if(mark==0){
+            System.out.println("No possible solution");
+        } else if(mark==1){
+            System.out.println("Solutions can be determined");
+            solutions = singleSolutionReturn(matrix);
+            System.out.println();
+        } else{
+            System.out.println("Many solutions");
+            Operations.printMatrix(matrix);
+            translator(matrix);
+        }
+        return solutions;
     }
 
     public void gaussDriverInterpolation(Matrix matrix, Matrix mOut, StringBuilder kalimat){
@@ -226,7 +249,7 @@ public class SPLSolver {
         return 2;
     }
 
-    static void singleSolution(Matrix matrix){
+    static void singleSolution(Matrix matrix, Matrix mOut){
         int n_row = matrix.getNrow();
         int n_col = matrix.getNcol();
         int eff_row = n_row;
@@ -258,9 +281,10 @@ public class SPLSolver {
                 }
             }
         }
-
+        mOut.makeMatrix(solutions.size(), 1);
         for(int i=solutions.size()-1;i>-1;i--){
             System.out.println("x"+ (solutions.size() - i) + "=" + solutions.get(i));
+            mOut.setElmt(i, 0, Double.parseDouble(solutions.get(i)));
         }
     }
 
@@ -521,10 +545,13 @@ public class SPLSolver {
         Operations.printMatrix(matrix);
         Operations.printMatrix(padding);
 
+        char[] simpanPara = new char[dependent.size()];
+
         for(int r=0;r<dependent.size();r++){
             String parametric = new String();
             parametric = "x" + Integer.toString(dependent.get(r)+1) + "="+ (char)(119-r);
             System.out.println(parametric);
+            simpanPara[r] = (char)(119-r);
         }
 
 
@@ -750,6 +777,110 @@ public class SPLSolver {
                 }
                 if(allZero) {break;}
                 else {System.out.println("");}
+            }
+        }
+    }
+
+    static void translatorBuatIOFile(Matrix matrix, char[] simpanPara){
+        int row = matrix.getNrow();
+        int col = matrix.getNcol();
+
+        Vector<Integer> tempIndependent = new Vector<>();
+        Vector<Integer> dependent = new Vector<>();
+        for(int y=0;y<col-1;y++){
+            boolean found = false;
+            for(int x=row-1;x>-1;x--){
+                if(Operations.roundAvoid(matrix.getElmt(x,y), 15)==1){
+                    if(y == 0) {
+                        found = true;
+                        break;
+                    } else {
+                        boolean isLeading = true;
+                        for(int e = y-1; e >= 0; e--) {
+                            if(matrix.getElmt(x,e) != 0) {
+                                isLeading = false;
+                            }
+                        }
+                        if(isLeading) {
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            if(found){
+                tempIndependent.add(y);
+            } else{
+                dependent.add(y);
+            }
+        }
+
+        System.out.println(tempIndependent);
+        System.out.println(dependent);
+
+        //Do backwards subtitution for dependents
+        Matrix padding = new Matrix();
+        padding.makeMatrix(row, dependent.size());
+        for(int y=0;y<dependent.size();y++){
+            for(int x=0;x<row;x++){
+                if(matrix.getElmt(x, dependent.get(y))!=0){
+                    padding.setElmt(x,y, padding.getElmt(x,y)+matrix.getElmt(x,dependent.get(y))*-1);
+                }
+                matrix.setElmt(x, dependent.get(y), 0);
+            }
+        }
+
+        Vector<Integer> independent = new Vector<>();
+        for(int i=tempIndependent.size()-1;i>-1;i--){
+            independent.add(tempIndependent.get(i));
+        }
+
+        for(int y=0;y<independent.size();y++){
+            int mark = row -1;
+            boolean found = false;
+            double value = 1;
+            for(int x=row-1;x>-1;x--){
+                if(Operations.roundAvoid(matrix.getElmt(x, independent.get(y)),14)==1){
+                    value = matrix.getElmt(x,col-1);
+                    found = true;
+                    mark = x;
+                    break;
+                }
+            }
+            if(found){
+                for(int x=mark-1;x>-1;x--){
+                    double v = matrix.getElmt(x,independent.get(y))*value;
+                    matrix.setElmt(x,col-1, matrix.getElmt(x,col-1)-v);
+                    double mul = matrix.getElmt(x, independent.get(y))/matrix.getElmt(mark, independent.get(y));
+                    for(int e=0;e<padding.getNcol();e++){
+                        padding.setElmt(x,e, padding.getElmt(x,e)-mul*padding.getElmt(mark,e));
+                    }
+                    matrix.setElmt(x, independent.get(y),0);
+                }
+            }
+        }
+
+        Operations.printMatrix(matrix);
+        Operations.printMatrix(padding);
+
+        simpanPara = new char[dependent.size()];
+
+        for(int r=0;r<dependent.size();r++){
+            String parametric = new String();
+            parametric = "x" + Integer.toString(dependent.get(r)+1) + "="+ (char)(119-r);
+            System.out.println(parametric);
+            simpanPara[r] = (char)(119-r);
+        }
+
+
+        for(int r=0;r<row;r++){
+            String res = paddingParser(matrix,r,padding);
+            Character c = res.charAt(0);
+            Character d = "=".charAt(0);
+            if(c.equals(d)){
+                break;
+            }else{
+                System.out.println(res);
             }
         }
     }

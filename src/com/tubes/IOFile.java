@@ -1,7 +1,5 @@
 package com.tubes;
 
-import java.util.Scanner;
-
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -115,6 +113,7 @@ public class IOFile {
                 if (!(kalimat.equals(""))) {
                     myWriter.write(kalimat.toString()+"\n");
                 }
+
                 for (i = 0; i < matriks.getNrow(); i++) {
                     line = "";
                     for (j = 0; j < matriks.getNcol(); j++) {
