@@ -83,7 +83,7 @@ public class SPLSolver {
         }
     }
 
-    public void gaussDriverRegression(Matrix matrix, int n, Matrix mOut){
+    public void gaussDriverRegression(Matrix matrix, int n, Matrix mOut, StringBuilder kalimat){
         double[] x = new double[n];
         double y = 0;
         Matrix M;
@@ -91,6 +91,7 @@ public class SPLSolver {
         M = gauss(matrix);
         int mark = validateGaussMatrix(M);
         if(mark==0){
+            kalimat.append("No possible solution");
             System.out.println("No possible solution");
         } else if(mark==1){
             System.out.println("Solutions can be determined");
@@ -109,7 +110,8 @@ public class SPLSolver {
                     }
                 }
             }
-            System.out.println(equation);
+            kalimat.append(equation);
+            System.out.println(kalimat);
 
             mOut.makeMatrix(1, n+1);
             for(int i = 0; i < n; i++) {

@@ -98,11 +98,13 @@ public class IOFile {
         }
     }
 
-    static void matriksToFile(Matrix matriks, String fileName) {
+    static void matriksToFile(Matrix matriks, String fileName, StringBuilder kalimat) {
         // KAMUS
         int i;
         int j;
         String line;
+        System.out.println(kalimat);
+        System.out.println("Kalimat should be printed above");
 
         // ALGORITMA
         try {
@@ -112,6 +114,9 @@ public class IOFile {
             } 
 
             try (FileWriter myWriter = new FileWriter(myFile.getName())) {
+                if (!(kalimat.equals(""))) {
+                    myWriter.write(kalimat.toString()+"\n");
+                }
                 for (i = 0; i < matriks.getNrow(); i++) {
                     line = "";
                     for (j = 0; j < matriks.getNcol(); j++) {
@@ -135,7 +140,7 @@ public class IOFile {
         }
     }
 
-    static void matriksToFile(SquareMatrix matriks, String fileName) {
+    static void matriksToFile(SquareMatrix matriks, String fileName, StringBuilder kalimat) {
         // KAMUS
         int i;
         int j;
@@ -149,6 +154,9 @@ public class IOFile {
             }
 
             try (FileWriter myWriter = new FileWriter(myFile.getName())) {
+                if (!(kalimat.equals(""))) {
+                    myWriter.write(kalimat.toString()+"\n");
+                }
                 for (i = 0; i < matriks.getDimension(); i++) {
                     line = "";
                     for (j = 0; j < matriks.getDimension(); j++) {

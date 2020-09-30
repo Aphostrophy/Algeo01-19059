@@ -20,6 +20,7 @@ public class Main {
                     "6. Exit\n");
             Scanner input = new Scanner(System.in);
             int opt = input.nextInt();
+            StringBuilder kalimat = new StringBuilder("");
 
             switch (opt){
                 case 1:
@@ -69,7 +70,7 @@ public class Main {
                     } else{
                         System.out.println("Input salah");
                     }
-                    OpsiPrintHasil(hasilMat);
+                    OpsiPrintHasil(hasilMat, kalimat);
                     break;
 
                 case 2:
@@ -103,7 +104,7 @@ public class Main {
                     hasilMat.makeMatrix(1, 1);
 
                     hasilMat.setElmt(0, 0, det);
-                    OpsiPrintHasil(hasilMat);
+                    OpsiPrintHasil(hasilMat, kalimat);
                     break;
 
                 case 3:
@@ -143,7 +144,7 @@ public class Main {
                         Inverse.RowOperationInverse(matrixInverse, hasilMat);
                     }
 
-                    OpsiPrintHasil(hasilMat);
+                    OpsiPrintHasil(hasilMat, kalimat);
                     break;
 
                 case 4:
@@ -158,7 +159,7 @@ public class Main {
                         int n = p.nextInt();
                         Interpolasi interpolasi = new Interpolasi();
                         interpolasi.driverManual(n, hasilMat);
-                        OpsiPrintHasil(hasilMat);
+                        OpsiPrintHasil(hasilMat, kalimat);
 
                     } else if (ops == 2) {
                         // input nama file
@@ -177,7 +178,7 @@ public class Main {
                         // penghitungan
                         SPLSolver solver = new SPLSolver();
                         solver.gaussDriverInterpolation(matrixInterpolateOut, hasilMat);
-                        OpsiPrintHasil(hasilMat);
+                        OpsiPrintHasil(hasilMat, kalimat);
                     }
                     break;
 
@@ -230,9 +231,9 @@ public class Main {
                     System.out.println("Matriks dari persamaan yang terbentuk : ");
                     Operations.printMatrix(dataMatrix);
                     SPLSolver solver = new SPLSolver();
-                    solver.gaussDriverRegression(dataMatrix, var, hasilMat);
+                    solver.gaussDriverRegression(dataMatrix, var, hasilMat, kalimat);
 
-                    OpsiPrintHasil(hasilMat);
+                    OpsiPrintHasil(hasilMat, kalimat);
                     break;
 
                 case 6:
@@ -254,7 +255,7 @@ public class Main {
         return input.nextInt();
     }
 
-    static void OpsiPrintHasil(Matrix matrix) {
+    static void OpsiPrintHasil(Matrix matrix, StringBuilder kalimat) {
         // Menawarkan menuliskan hasil operasi ke dalam file .txt
         Scanner input = new Scanner(System.in);
         System.out.println("Print hasil?\n" +
@@ -265,7 +266,7 @@ public class Main {
             System.out.print("Masukkan nama file :\n");
             Scanner inputFileName = new Scanner(System.in);
             String fileName = inputFileName.nextLine();
-            IOFile.matriksToFile(matrix, fileName);
+            IOFile.matriksToFile(matrix, fileName, kalimat);
         }
     }
 }
