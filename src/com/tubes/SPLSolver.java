@@ -117,24 +117,24 @@ public class SPLSolver {
                 x[i] = scanner.nextDouble();
                 mOut.setElmt(0, i, x[i]);
             }
+            int var = 0;
             for(int i=solutions.size()-1;i>-1;i--){
-                int var = 0;
                 if(i==solutions.size()-1){
                     y += solutions.get(i);
                 } else {
                     y += solutions.get(i)*x[var];
+                    var++;
                 }
-                var++;
             }
             System.out.print("y(");
             for(int i = 0; i < n; i++) {
                 if(i != n-1) {
-                    System.out.print("x" + i + ", ");
+                    System.out.print("x" + (i+1) + ", ");
                 } else {
-                    System.out.print("x" + i + ") = ");
+                    System.out.print("x" + (i+1) + ") = ");
                 }
             }
-            System.out.println(y);
+            System.out.println(Operations.roundAvoid(y, 14));
             mOut.setElmt(0, mOut.getNcol() - 1, y);
 
             System.out.println();
