@@ -301,6 +301,11 @@ public class SPLSolver {
         double detA;
 
         // ALGORITMA
+        if(m.getNrow() != m.getNcol()-1) {
+            System.out.println("Matriks A bukan matriks persegi, sehingga metode ini tidak dapat digunakan.");
+            return;
+        }
+
         // matrix augmented menjadi matriks biasa; matriks A dan matriks B
         extractAug(m, matriksA, matriksB);
 
@@ -336,6 +341,7 @@ public class SPLSolver {
             }
         } else { // jika determinan matriks 0, tidak dapat dilakukan penghitungan
             System.out.println("Determinan 0, SPL tidak memiliki solusi unik.");
+            return;
         }
     }
 
@@ -356,8 +362,18 @@ public class SPLSolver {
         Matrix mInversed = new Matrix();
 
         // ALGORITMA
+        if(m.getNrow() != m.getNcol()-1) {
+            System.out.println("Matriks A bukan matriks persegi, sehingga metode ini tidak dapat digunakan.");
+            return;
+        }
+
         // Mengambil matriks SPL dari matriks augmented
         extractAug(m, matriksA, matriksB);
+
+        if(Determinant.CofactorExpansionDeterminant(matriksA) == 0) {
+            System.out.println("Determinan matriks 0. SPL tidak memiliki solusi unik.");
+            return;
+        }
 
         // invers matriks
         Inverse.AdjointInverse(matriksA, mInversed);
@@ -562,14 +578,14 @@ public class SPLSolver {
         int idxRow = 0;
         int idxCol = 0;
 
-        while(idxRow < matrix.getNrow() && idxCol < matrix.getNcol()) {
+        while(idxRow < matrix.getNrow() && idxCol < matrix.getNcol()-1) {
             double temp = matrix.getElmt(idxRow, idxCol);
 
             // Jika elemen paling calon ledaing one matriks merupakan 0, lakukan swap baris
             if(temp == 0) {
                 int i = idxRow + 1;
                 while(i < matrix.getNrow()) {
-                    if(matrix.getElmt(i, idxRow) != 0) {
+                    if(matrix.getElmt(i, idxCol) != 0) {
                         Operations.swapRow(i, idxRow, matrix);
                         break;
                     }
@@ -631,8 +647,19 @@ public class SPLSolver {
         if(!solvable) {
             System.out.println("SPL tidak memiliki solusi");
         } else {
-            // Mengganti variabel dependen dengan variabel lain jika SPL memilki banyak solusi
             int abjad = 0;
+            for(int j = 0; j < matrix.getNcol()-1; j++) {
+                boolean varBebas = true;
+                for(int i = 0; i < matrix.getNrow(); i++) {
+                    if(matrix.getElmt(i,j) != 0) {
+                        varBebas = false;
+                    }
+                }
+                if(varBebas) {
+                    System.out.println("x" + (j+1) + " = " + (char)(119-abjad));;
+                    abjad++;
+                }
+            }
             for(int i = 0; i < matrix.getNrow(); i++) {
                 int j = 0;
                 while (j < matrix.getNcol()-1) {
@@ -649,7 +676,6 @@ public class SPLSolver {
                 }
             }
 
-            // Mencetak solusi independen
             for(int i = 0; i < matrix.getNrow(); i++) {
                 int j = 0;
                 int temp = countVarBrs[i];
@@ -670,10 +696,8 @@ public class SPLSolver {
                         else if (matrix.getElmt(i, j) != 0) {
                             if (matrix.getElmt(i, j) >= 0) {
                                 System.out.print(" - " + matrix.getElmt(i, j) + definedVar[j]);
-                                abjad++;
                             } else {
                                 System.out.print(" + " + (-1 * matrix.getElmt(i, j)) + definedVar[j]);
-                                abjad++;
                             }
                             temp--;
                         }
@@ -685,27 +709,29 @@ public class SPLSolver {
                         if(matrix.getElmt(i, j) != 0 && temp == countVarBrs[i]) {
                             allZero = false;
                             System.out.print("x" + (j+1) + " = ");
-                            j++;
-                            // Jika hanya ada 1 variabel terdefinisi dalam baris, cetak 0
-                            if(countVarBrs[i] == 1) {
-                                System.out.print(0);
-                            } else if(matrix.getElmt(i, j) >= 0) {
-                                System.out.print("-" + matrix.getElmt(i, j) + definedVar[j]);
-                                abjad++;
-                            } else {
-                                System.out.print((-1 * matrix.getElmt(i, j)) + "" + definedVar[j]);
-                                abjad++;
+                            int k = j+1;
+                            while(k < matrix.getNcol()-1) {
+                                // Jika hanya ada 1 variabel terdefinisi dalam baris, cetak 0
+                                if (countVarBrs[i] == 1) {
+                                    System.out.print(0);
+                                    break;
+                                } else if (matrix.getElmt(i, k) > 0) {
+                                    System.out.print("-" + matrix.getElmt(i, k) + definedVar[k]);
+                                    break;
+                                } else if (matrix.getElmt(i, k) < 0){
+                                    System.out.print((-1 * matrix.getElmt(i, k)) + "" + definedVar[k]);
+                                    break;
+                                }
+                                k++;
                             }
                             temp -= 2;
-                            j++;
+                            j = k;
                         } else if(matrix.getElmt(i, j) != 0) {
                             allZero = false;
                             if(matrix.getElmt(i, j) >= 0) {
                                 System.out.print(" - " + matrix.getElmt(i, j) + definedVar[j]);
-                                abjad++;
                             } else {
                                 System.out.print(" + " + (-1*matrix.getElmt(i, j)) + definedVar[j]);
-                                abjad++;
                             }
                             temp--;
                         }
