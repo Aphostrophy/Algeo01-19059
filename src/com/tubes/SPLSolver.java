@@ -37,7 +37,7 @@ public class SPLSolver {
         } else if(mark==1){
             System.out.println("Solutions can be determined");
             Vector<Double> solutions = new Vector<>();
-            String equation = "P2(x)= ";
+            String equation = "P" + (matrix.getNrow()-1) +"(x)= ";
             solutions = singleSolutionReturn(matrix);
             System.out.println(solutions);
             for(int i=solutions.size()-1;i>-1;i--){
@@ -67,7 +67,7 @@ public class SPLSolver {
                     y += solutions.get(i)*Math.pow(x, solutions.size()-1-i);
                 }
             }
-            System.out.println("P2(" + x + ") = " + y);
+            System.out.println("P" + (matrix.getNrow()-1)+ "(" + x + ") = " + y);
             System.out.println();
         } else{
             System.out.println("Many solutions, interpolation cannot be determined");
