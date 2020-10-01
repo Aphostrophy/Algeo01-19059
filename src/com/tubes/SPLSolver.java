@@ -10,7 +10,6 @@ public class SPLSolver {
         Matrix M;
         Operations.printMatrix(matrix);
         M = gauss(matrix);
-        System.out.println("tes");
         int mark = validateGaussMatrix(M);
         Operations.printMatrix(M);
         if(mark==0){
@@ -34,7 +33,6 @@ public class SPLSolver {
         Vector<Double> solutions = new Vector<>();
         Operations.printMatrix(matrix);
         M = gauss(matrix);
-        System.out.println("tes");
         int mark = validateGaussMatrix(M);
         Operations.printMatrix(M);
         if(mark==0){
@@ -100,9 +98,6 @@ public class SPLSolver {
             mOut.makeMatrix(1, 2);
             mOut.setElmt(0, 0, x);
             mOut.setElmt(0, 1, y);
-
-            System.out.println("P2(" + x + ") = " + y);
-            System.out.println();
         } else{
             kalimat.append("Many solutions, interpolation cannot be determined");
             System.out.println(kalimat);
@@ -653,12 +648,13 @@ public class SPLSolver {
                     }
                 }
             }
-            Operations.printMatrix(matrix);
 
             // Melanjutkan ke baris berikutnya
             idxRow++;
             idxCol++;
         }
+
+        Operations.printMatrix(matrix);
 
         // Mencari tahu apakah SPL ada solusinya atau tidak
         if(matrix.getElmt(matrix.getNrow()-1, matrix.getNcol()-1) != 0) {

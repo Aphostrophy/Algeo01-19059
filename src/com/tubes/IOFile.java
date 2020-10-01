@@ -136,44 +136,4 @@ public class IOFile {
             e.printStackTrace();
         }
     }
-
-    static void matriksToFile(SquareMatrix matriks, String fileName, StringBuilder kalimat) {
-        // KAMUS
-        int i;
-        int j;
-        String line;
-
-        // ALGORITMA
-        try {
-            File myFile = new File(fileName);
-            if (myFile.createNewFile()) {
-                System.out.println("File created: " + myFile.getName());
-            }
-
-            try (FileWriter myWriter = new FileWriter(myFile.getName())) {
-                if (!(kalimat.equals(""))) {
-                    myWriter.write(kalimat.toString()+"\n");
-                }
-                for (i = 0; i < matriks.getDimension(); i++) {
-                    line = "";
-                    for (j = 0; j < matriks.getDimension(); j++) {
-                        line += String.valueOf(matriks.getElmt(i, j));
-                        if (j != matriks.getDimension() - 1) {
-                            line += " ";
-                        }
-                    }
-                    myWriter.write(line);
-                    if (i != matriks.getDimension() - 1) {
-                        myWriter.write("\n");
-                    }
-                }
-            } catch (FileNotFoundException ex) {
-                System.out.println("File " + fileName + " was not found.");
-            }
-
-        } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
-    }
 }

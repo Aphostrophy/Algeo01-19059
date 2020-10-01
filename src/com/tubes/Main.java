@@ -94,10 +94,17 @@ public class Main {
                     }
                     Operations.printMatrix(matrix);
 
-                    double det = Determinant.RowReductionDeterminant(matrix);
-                    System.out.println("The determinant value is " + det);
-                    det = Determinant.CofactorExpansionDeterminant(matrix);
-                    System.out.println("The determinant value is " + det);
+                    System.out.println("1. Metode OBE\n" +
+                            "2. Metode Ekspansi Kofaktor\n");
+                    double det = 0;
+                    int opd = input.nextInt();
+                    if(opd == 1) {
+                        det = Determinant.RowReductionDeterminant(matrix);
+                        System.out.println("The determinant value is " + det);
+                    } else if (opd == 2) {
+                        det = Determinant.CofactorExpansionDeterminant(matrix);
+                        System.out.println("The determinant value is " + det);
+                    }
 
                     // hasil matriks untuk diprint
                     hasilMat = new Matrix();
