@@ -1,11 +1,17 @@
 # LinearAlgebra
 
-Project menggunakan JDK 11
+<h1>Project menggunakan JDK 11</h1>
 
-Setup dengan intelliJ idea
-.idea : file dari intelliJ
+<p>
+  Setup dengan intelliJ idea
+  .idea : file dari intelliJ
+ </p>
 
-bin & out: java bytecode
-src: source code java
-doc : laporan
-test : file" studi kasus
+<h3>Penjelasan directory</h3>
+<ul>
+  <li>bin & out: java bytecode</li>
+  <li>src: source code java</li>
+  <li>doc : laporan</li>
+  <li>test : file" studi kasus</li>
+</ul>
+
